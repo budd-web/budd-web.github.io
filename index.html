@@ -9627,10 +9627,10 @@ function hubJoin(sid){if(hs===sid)return;if(HUB)HUB.stop();hs=sid;HM={};HUB=null
 window.hubSend=d=>{if(HUB)HUB.send(d)};window.hubOut=(k,m)=>{const a=k.split(':');if(HUB&&a[1]===hs)HUB.send({t:'m',k,m})};window.hubRaw=m=>{const a=String(m.k).split(':');if(HUB&&a[1]===hs)HUB.send(m)};
 const myProf=()=>Object.assign({ab:String(ls('budd_about','')||'')},ls('budd_prof',{})||{});
 let lastBn='';const PBN={},PBS={};
-function pbnGet(u){if(PBS[u]||u===MY)return;PBS[u]=1;GL&&GL.send({t:'pbq',to:u,from:MY});setTimeout(()=>{delete PBS[u]},20000)}
+function pbnGet(u){if(PBS[u]||u===MY)return;PBS[u]=1;const ask=n=>{if(PBN[u]||n>3)return;try{GL&&GL.send({t:'pbq',to:u,from:MY})}catch(e){}setTimeout(()=>ask(n+1),2500)};ask(0);setTimeout(()=>{delete PBS[u]},12000)}
 function capObj(o,n){const k=Object.keys(o);while(k.length>=n)delete o[k.shift()]}
-function pbnGot(u,v,k){if(k==='a'){if(typeof v==='string'&&/^data:image\/(gif|webp|png);base64,[A-Za-z0-9+\/=]+$/.test(v)&&v.length<420000){if(!PAN[u])capObj(PAN,10);PAN[u]=v;try{avRepaintAll()}catch(e){}}return}if(typeof v==='string'&&/^data:image\//.test(v)&&v.length<1200000){if(!PBN[u])capObj(PBN,8);PBN[u]=v;const el=document.querySelector('#spBn[data-u="'+u+'"]');if(el&&window.setBan)setBan(el,{t:'i',v},u)}}
-function pbnAns(to,k){if(k==='a'){try{const a=myProf().pa;if(typeof a==='string'&&a.length<420000)GL&&GL.send({t:'pbr',to,u:MY,v:a,k:'a'})}catch(e){}return}try{const b=myProf().bn;if(b&&b.t==='i'&&typeof b.v==='string'&&b.v.length<1200000)GL&&GL.send({t:'pbr',to,u:MY,v:b.v})}catch(e){}}
+function pbnGot(u,v,k){if(k==='a'){if(typeof v==='string'&&/^data:image\/(gif|webp|png);base64,[A-Za-z0-9+\/=]+$/.test(v)&&v.length<420000){if(!PAN[u])capObj(PAN,10);PAN[u]=v;try{avRepaintAll()}catch(e){}}return}if(typeof v==='string'&&/^data:image\//.test(v)&&v.length<1200000){if(!PBN[u])capObj(PBN,40);PBN[u]=v;try{const pc=document.getElementById('pcBn');if(pc&&pc.closest('[data-pu="'+u+'"]')&&window.setBan)setBan(pc,{t:'i',v},u)}catch(e){}const el=document.querySelector('#spBn[data-u="'+u+'"]');if(el&&window.setBan)setBan(el,{t:'i',v},u)}}
+function pbnAns(to,k){if(k==='a'){try{const a=myProf().pa;if(typeof a==='string'&&a.length<420000)GL&&GL.send({t:'pbr',to,u:MY,v:a,k:'a'})}catch(e){}return}try{const b=myProf().bn;if(b&&b.t==='i'&&typeof b.v==='string'&&b.v.length<1200000){const v=b.v,snd=x=>{try{GL&&GL.send({t:'pbr',to,u:MY,v:x})}catch(e){}};if(v.length>250000&&/^data:image\/(png|jpeg)/.test(v)){const im=new Image();im.onload=()=>{try{const c=document.createElement('canvas'),r=Math.min(1,720/im.width);c.width=Math.round(im.width*r);c.height=Math.round(im.height*r);c.getContext('2d').drawImage(im,0,0,c.width,c.height);snd(c.toDataURL('image/jpeg',.78))}catch(e){snd(v)}};im.onerror=()=>snd(v);im.src=v}else snd(v)}}catch(e){}}
 function pubProf(){try{HUB&&HUB.send(pr());GL&&GL.send(pr())}catch(e){}}
 setInterval(pubProf,12000);addEventListener('pagehide',()=>{try{HUB&&HUB.send({t:'bye',u:MY});GL&&GL.send({t:'bye',u:MY})}catch(e){}});document.addEventListener('visibilitychange',()=>{if(!document.hidden)pubProf()});addEventListener('online',()=>pubProf());setInterval(()=>{try{const ks=Object.keys(PF2).sort((a,b)=>(PF2[b].ts||0)-(PF2[a].ts||0)).slice(0,300),o={};ks.forEach(k=>o[k]=PF2[k]);ss('budd_pf2',o);ss('budd_mem',DMS)}catch(e){}},20000);
 window.buddPfByName=n=>{n=String(n||'').trim().toLowerCase();if(!n)return null;try{if([nm(),nm().slice(0,14)].some(z=>String(z).trim().toLowerCase()===n))return{sn:window.buddSince?buddSince():0,sm:window.buddStreamMin?buddStreamMin():0}}catch(e){}for(const u in PF2){const o=PF2[u];if(o&&String(o.n||'').trim().toLowerCase()===n)return o}return null};window.decPeer=u=>{if(u===MY)return decMine();const o=PF2[u]||ON[u]||HM[u];return o&&o.dc||''};
@@ -15029,7 +15029,7 @@ function saveS(){W('budd_coin_st',S)}
 function pendSum(){return S.pend.reduce(function(a,p){return a+p.a},0)}
 function disp(){return Math.max(0,bal+pendSum())}
 function emit(){try{document.querySelectorAll('.coinChip').forEach(function(e){e.textContent=IC+' '+fmt(disp())})}catch(x){}try{window.dispatchEvent(new CustomEvent('buddcoin'))}catch(x){}}
-window.coinBalance=disp;
+window.coinBalance=disp;window.coinPull=function(){try{pull()}catch(e){}};
 
 /* ---------- sonsuz görev üreteci ---------- */
 function rnd(){S.seed=(S.seed+0x6D2B79F5)|0;var t=Math.imul(S.seed^S.seed>>>15,1|S.seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}
@@ -15178,5 +15178,157 @@ setInterval(run,20000);setTimeout(run,5000);
 window.buddBotsSyncNow=run;
 })();
 </script>
+
+<style id="ucGfCss">
+.dcRi{position:relative}
+.dcRi [data-stk]{position:absolute!important;right:0;top:0;opacity:0;pointer-events:none;width:32px!important;height:32px!important}
+.ucTabs{display:flex;gap:6px;padding:8px 10px 0;flex:none}
+.ucTabs button{all:unset;cursor:pointer;padding:6px 14px;border-radius:999px;font:600 13px/1 system-ui,sans-serif;color:#b5bac1;background:#ffffff0d;transition:.15s}
+.ucTabs button:hover{background:#ffffff1a}.ucTabs button.on{background:#5865f2;color:#fff}
+#stkPop>.skB{flex:1;min-height:0}
+.dcRi [data-gift] svg{width:22px;height:22px;fill:currentColor}
+.dcRi [data-gift]:hover{color:#f7c948}
+#gfOv{position:fixed;inset:0;z-index:400;background:#000b;display:none;align-items:center;justify-content:center;padding:12px}
+#gfOv.open{display:flex}
+.gfM{width:min(560px,100%);max-height:94vh;overflow:auto;background:#313338;color:#f2f3f5;border-radius:18px;box-shadow:0 12px 50px #000c;font-family:system-ui,sans-serif;animation:gfIn .25s cubic-bezier(.2,1.3,.4,1)}
+@keyframes gfIn{from{transform:scale(.9);opacity:0}}
+.gfH{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;font-weight:700;font-size:17px;border-bottom:1px solid #ffffff14}
+.gfH button{all:unset;cursor:pointer;font-size:20px;color:#b5bac1;padding:0 6px}
+.gfB{padding:16px 20px;display:flex;flex-direction:column;gap:14px;align-items:center}
+.gfCard{position:relative;width:100%;aspect-ratio:16/9;border-radius:18px;overflow:hidden;display:block}
+.gfCard svg{position:absolute;inset:0;width:100%;height:100%}
+.gfLogo{position:absolute;left:14px;top:12px;z-index:2;font:800 20px/1 system-ui;color:#fff;text-shadow:0 2px 6px #0006;letter-spacing:.5px}
+.gfLogo small{display:block;font:600 10px/1.2 system-ui;opacity:.85}
+.gfAmt{position:absolute;left:14px;bottom:12px;z-index:2;background:#0006;padding:5px 12px;border-radius:999px;font:700 15px/1 system-ui;color:#ffe27a}
+.gfPrev{all:unset;cursor:pointer;color:#5eb0ee;font:700 18px/1 system-ui;display:flex;align-items:center;gap:8px}
+.gfThumbs{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.gfThumbs button{all:unset;cursor:pointer;width:84px;aspect-ratio:16/9;border-radius:10px;overflow:hidden;position:relative;outline:2px solid transparent;transition:.15s;opacity:.75}
+.gfThumbs button.on{outline-color:#5eb0ee;opacity:1;transform:translateY(-2px)}
+.gfThumbs svg{position:absolute;inset:0;width:100%;height:100%}
+.gfRow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;width:100%}
+.gfRow button{all:unset;cursor:pointer;padding:8px 14px;border-radius:10px;background:#ffffff12;font-weight:700;font-size:14px}
+.gfRow button.on{background:#5865f2}
+.gfIn{width:100%;box-sizing:border-box;background:#1e1f22;border:0;border-radius:10px;padding:12px;color:#fff;font:600 16px system-ui;text-align:center;outline:none}
+.gfBal{font-size:13px;color:#b5bac1}
+.gfF{display:flex;justify-content:space-between;padding:14px 20px;background:#2b2d31;border-radius:0 0 18px 18px}
+.gfF button{all:unset;cursor:pointer;padding:10px 22px;border-radius:10px;font-weight:700}
+.gfF .go{background:#5865f2;color:#fff}.gfF .go:disabled{opacity:.5}
+.gfMsg{width:min(320px,100%);margin:4px 0}
+.gfMsg .gfCard{border-radius:14px}
+.gfAct{all:unset;cursor:pointer;display:block;margin-top:8px;background:#5865f2;color:#fff;padding:8px 18px;border-radius:999px;font:700 13px system-ui}
+.gfAct:disabled,.gfAct.dn{background:#4e5058;cursor:default}
+.gfFlo{animation:gfF 2.6s ease-in-out infinite;transform-origin:50% 90%}
+@keyframes gfF{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-5px) rotate(1.5deg)}}
+.gfSp{animation:gfT 1.8s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.gfSp:nth-of-type(2n){animation-delay:.6s}.gfSp:nth-of-type(3n){animation-delay:1.1s}
+@keyframes gfT{0%,100%{opacity:.15;transform:scale(.5)}50%{opacity:1;transform:scale(1.15)}}
+.gfLid{transition:transform .7s cubic-bezier(.3,1.7,.5,1);transform-box:fill-box}
+.gfBox .gfLid{transform-origin:left bottom}.gfChest .gfLid{transform-origin:left bottom}
+.open .gfBox .gfLid{transform:translateY(-34px) rotate(-14deg)}
+.open .gfChest .gfLid{transform:rotate(-38deg)}
+.open .gfPouch .gfTie{transform:rotate(-30deg) translateY(-8px)}
+.gfTie{transition:transform .6s;transform-box:fill-box;transform-origin:center}
+.gfGlow{opacity:0;transition:opacity .5s}.open .gfGlow{opacity:1}
+.gfCn{opacity:0;transform-box:fill-box;transform-origin:center}
+.open .gfCn{animation:gfC 1.3s cubic-bezier(.2,.8,.3,1) forwards;animation-delay:calc(var(--i)*.09s + .25s)}
+@keyframes gfC{0%{opacity:1;transform:translate(0,30px) scale(.5)}60%{opacity:1}100%{opacity:0;transform:translate(var(--x),-95px) scale(1) rotate(360deg)}}
+.open .gfStar{animation:gfP .8s ease-out}
+@keyframes gfP{50%{transform:scale(1.25) rotate(10deg)}}
+.gfStar{transform-box:fill-box;transform-origin:center}
+@media(prefers-reduced-motion:reduce){.gfFlo,.gfSp,.gfCn{animation:none!important}}
+</style>
+<script id="ucGfJs">(function(){
+"use strict";
+var $=function(s){return document.querySelector(s)};
+function J(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}}
+function W(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function toast2(m,t){try{toast(m,t||'')}catch(e){alert(m)}}
+
+/* ===== 1) Emoji + Çıkartma tek tuş ===== */
+function strip(a){return '<div class="ucTabs"><button type="button" data-uc="emj" class="'+(a==='emj'?'on':'')+'">😀 Emoji</button><button type="button" data-uc="stk" class="'+(a==='stk'?'on':'')+'">🖼️ Çıkartma</button></div>'}
+setInterval(function(){
+ [['emjPop','emj'],['stkPop','stk']].forEach(function(x){var p=document.getElementById(x[0]);
+  if(p&&p.classList.contains('open')&&!p.querySelector(':scope>.ucTabs'))p.insertAdjacentHTML('afterbegin',strip(x[1]))})},120);
+document.addEventListener('click',function(e){
+ var b=e.target.closest&&e.target.closest('[data-uc]');if(!b)return;
+ e.preventDefault();e.stopPropagation();if(b.classList.contains('on'))return;
+ var stk=$('.dcRi [data-stk]'),emj=$('.dcRi [data-emj]');
+ if(b.dataset.uc==='stk'){if(stk)stk.click()}
+ else{if(stk)stk.click();/* açıksa kapatır */ setTimeout(function(){if(emj)emj.click()},30)}
+},true);
+
+/* ===== 2) Budd Coin hediyesi ===== */
+var KINDS=[['box','Hediye Kutusu','linear-gradient(160deg,#36c3d6,#1c3fae)'],['chest','Hazine Sandığı','linear-gradient(160deg,#2f8f6b,#12363a)'],['pouch','Altın Kese','linear-gradient(160deg,#ff6bb5,#ff9d4d)'],['star','Yıldız','linear-gradient(160deg,#6a4cff,#1a1450)']];
+var SP='<g fill="#fff"><path class="gfSp" d="M28 30l3 7 7 3-7 3-3 7-3-7-7-3 7-3z"/><path class="gfSp" d="M170 24l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/><path class="gfSp" d="M160 95l2 5 5 2-5 2-2 5-2-5-5-2 5-2z"/><circle class="gfSp" cx="40" cy="95" r="2.5"/><circle class="gfSp" cx="120" cy="18" r="2"/></g>';
+function coins(){var o='';for(var i=0;i<7;i++){o+='<g class="gfCn" style="--i:'+i+';--x:'+((i-3)*16)+'px"><circle cx="100" cy="60" r="8" fill="#ffd54a" stroke="#e6a800" stroke-width="2"/><text x="100" y="64" text-anchor="middle" font-size="10" font-weight="800" fill="#b57a00">B</text></g>'}return o}
+function art(k){
+ var a='<svg viewBox="0 0 200 112" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">'+SP;
+ if(k==='box')a+='<g class="gfBox"><g class="gfFlo"><ellipse cx="100" cy="106" rx="46" ry="5" fill="#0003"/><rect class="gfGlow" x="70" y="40" width="60" height="30" fill="#fff7a8" opacity=".9"/><rect x="62" y="58" width="76" height="48" rx="3" fill="#e5384f"/><g fill="#f08ad0"><circle cx="76" cy="70" r="5"/><circle cx="118" cy="68" r="6"/><circle cx="90" cy="92" r="6"/><circle cx="126" cy="95" r="4"/></g><rect x="94" y="58" width="12" height="48" fill="#ffd54a"/>'+coins()+'<g class="gfLid"><rect x="56" y="44" width="88" height="17" rx="3" fill="#cf2b43"/><rect x="94" y="44" width="12" height="17" fill="#ffd54a"/><path d="M100 44c-14-18-30-8-20 2zM100 44c14-18 30-8 20 2z" fill="#ffe27a"/></g></g></g>';
+ if(k==='chest')a+='<g class="gfChest"><g class="gfFlo"><ellipse cx="100" cy="106" rx="50" ry="5" fill="#0003"/><rect x="52" y="62" width="96" height="44" rx="5" fill="#8a5a2b"/><rect x="52" y="76" width="96" height="6" fill="#d9a441"/><rect class="gfGlow" x="58" y="56" width="84" height="10" fill="#fff7a8"/>'+coins()+'<g class="gfLid"><path d="M52 62v-12a48 20 0 0 1 96 0v12z" fill="#a06a33"/><rect x="52" y="52" width="96" height="6" fill="#d9a441"/></g><rect x="93" y="66" width="14" height="16" rx="3" fill="#ffd54a" stroke="#c78d00" stroke-width="2"/></g></g>';
+ if(k==='pouch')a+='<g class="gfPouch"><g class="gfFlo"><ellipse cx="100" cy="106" rx="40" ry="5" fill="#0003"/><rect class="gfGlow" x="84" y="30" width="32" height="20" fill="#fff7a8"/>'+coins()+'<path d="M64 104c-14-30 6-50 28-56h16c22 6 42 26 28 56z" fill="#d1913a"/><path d="M82 48h36l6-10-12 5-12-8-12 8-12-5z" fill="#e8ad52"/><g class="gfTie"><rect x="80" y="46" width="40" height="7" rx="3" fill="#e5384f"/></g><text x="100" y="90" text-anchor="middle" font-size="26" font-weight="800" fill="#8a5a14">B</text></g></g>';
+ if(k==='star')a+='<g><g class="gfFlo"><ellipse cx="100" cy="106" rx="30" ry="4" fill="#0003"/>'+coins()+'<path class="gfStar" d="M100 24l11 24 26 3-19 18 5 26-23-13-23 13 5-26-19-18 26-3z" fill="#ffd54a" stroke="#ffb000" stroke-width="3" stroke-linejoin="round"/><circle cx="90" cy="64" r="3" fill="#7a4b00"/><circle cx="110" cy="64" r="3" fill="#7a4b00"/><path d="M92 74q8 7 16 0" stroke="#7a4b00" stroke-width="3" fill="none" stroke-linecap="round"/></g></g>';
+ return a+'</svg>'}
+function bg(k){return KINDS.filter(function(x){return x[0]===k})[0][2]}
+function card(k,amt,cls){return '<div class="gfCard '+(cls||'')+'" style="background:'+bg(k)+'">'+art(k)+'<div class="gfLogo"><small>Budd</small>COIN</div>'+(amt?'<div class="gfAmt">🪙 '+amt+'</div>':'')+'</div>'}
+
+/* gift butonu */
+var ri=$('.dcRi');
+if(ri&&!ri.querySelector('[data-gift]')){var gb=document.createElement('button');gb.type='button';gb.setAttribute('data-gift','1');gb.setAttribute('aria-label','Budd Coin gönder');
+ gb.innerHTML='<svg viewBox="0 0 24 24"><path d="M20 7h-2.2A3 3 0 0 0 12 4.6 3 3 0 0 0 6.2 7H4a1 1 0 0 0-1 1v3h8V7h2v4h8V8a1 1 0 0 0-1-1zM9 7a1 1 0 1 1 1-1v1zm6 0h-1V6a1 1 0 1 1 1 1zM4 13v6a2 2 0 0 0 2 2h5v-8zm9 0v8h5a2 2 0 0 0 2-2v-6z"/></svg>';
+ ri.insertBefore(gb,ri.firstChild)}
+
+/* modal */
+var G={k:'box',a:100};
+function ov(){var o=document.getElementById('gfOv');if(!o){o=document.createElement('div');o.id='gfOv';document.body.appendChild(o);o.addEventListener('click',function(e){if(e.target===o)close()})}return o}
+function close(){var o=document.getElementById('gfOv');if(o)o.classList.remove('open')}
+function bal(){try{return window.coinBalance?window.coinBalance():0}catch(e){return 0}}
+function draw(){var o=ov(),n=bal();
+ o.innerHTML='<div class="gfM"><div class="gfH"><span>Budd Coin Gönder</span><button type="button" data-gf="x">✕</button></div><div class="gfB"><div id="gfPv" style="width:100%">'+card(G.k,G.a)+'</div>'
+ +'<button type="button" class="gfPrev" data-gf="prev">▶ Önizle</button>'
+ +'<div class="gfThumbs">'+KINDS.map(function(x){return '<button type="button" data-gf="k" data-k="'+x[0]+'" class="'+(x[0]===G.k?'on':'')+'" style="background:'+x[2]+'" title="'+x[1]+'">'+art(x[0])+'</button>'}).join('')+'</div>'
+ +'<div class="gfRow">'+[25,50,100,250,500].map(function(v){return '<button type="button" data-gf="a" data-a="'+v+'" class="'+(v===G.a?'on':'')+'">🪙 '+v+'</button>'}).join('')+'</div>'
+ +'<input class="gfIn" id="gfAmtIn" type="number" inputmode="numeric" min="1" max="5000" value="'+G.a+'" placeholder="Miktar">'
+ +'<div class="gfBal">Bakiyen: 🪙 '+Math.round(n).toLocaleString('tr-TR')+'</div></div>'
+ +'<div class="gfF"><button type="button" data-gf="x">Vazgeç</button><button type="button" class="go" data-gf="send" id="gfGo">Gönder</button></div></div>';
+ o.classList.add('open');
+ var i=document.getElementById('gfAmtIn');i.oninput=function(){G.a=Math.max(0,Math.min(5000,Math.floor(+i.value||0)));var pv=document.getElementById('gfPv');if(pv){var am=pv.querySelector('.gfAmt');if(am)am.textContent='🪙 '+G.a}o.querySelectorAll('[data-gf="a"]').forEach(function(b){b.classList.toggle('on',+b.dataset.a===G.a)})}}
+function playPrev(){var pv=document.getElementById('gfPv');if(!pv)return;pv.classList.remove('open');void pv.offsetWidth;pv.classList.add('open');setTimeout(function(){pv.classList.remove('open')},2600)}
+
+/* sunucu (budd_gift_send / budd_gift_claim / budd_gift_refund — supabase_hediye.sql) */
+var SBU='https://ghczuzeswnofeklulver.supabase.co',KP='sb_publishable_uVbPX6KEfMwbuUq0-TRqEQ_jIcMge0D',SK='sb-ghczuzeswnofeklulver-auth-token';
+function rpc(fn,args){var t=null;try{var j=JSON.parse(localStorage.getItem(SK));if(j&&j.access_token)t=j.access_token}catch(e){}
+ if(!t)return Promise.reject('Giriş yapmalısın');
+ return fetch(SBU+'/rest/v1/rpc/'+fn,{method:'POST',headers:{apikey:KP,Authorization:'Bearer '+t,'Content-Type':'application/json'},body:JSON.stringify(args||{})}).then(function(r){if(!r.ok)return r.text().then(function(x){throw x});return r.status===204?null:r.json().catch(function(){return null})})}
+function errTxt(x){x=String(x||'');if(/yetersiz/i.test(x))return 'Yetersiz bakiye';if(/does not exist|PGRST202|Could not find/i.test(x))return 'Sunucuda hediye fonksiyonu yok (supabase_hediye.sql çalıştır)';if(/alındı|claimed/i.test(x))return 'Bu hediye zaten alınmış';try{var o=JSON.parse(x);if(o.message)return o.message}catch(e){}return x.slice(0,80)||'Hata'}
+function rid(){return Math.random().toString(36).slice(2,10)}
+
+function send(){var a=G.a,k=G.k;if(a<1)return toast2('Miktar gir','err');if(a>bal())return toast2('Yetersiz bakiye','err');
+ var inp=$('#chIn'),btn=$('#chSend');if(!inp||!btn)return;var id=rid(),go=document.getElementById('gfGo');go.disabled=true;
+ rpc('budd_gift_send',{p_amount:a,p_ref:id}).then(function(){
+  var sent=J('budd_gift_sent',[]);sent.push(id);W('budd_gift_sent',sent.slice(-200));
+  inp.value='[[gift:'+k+':'+a+':'+id+']]';inp.dispatchEvent(new Event('input',{bubbles:true}));btn.click();
+  setTimeout(function(){if(inp.value.indexOf('[[gift:')===0){inp.value='';rpc('budd_gift_refund',{p_ref:id}).catch(function(){});toast2('Gönderilemedi, coin iade edildi','err')}else toast2('🎁 Hediye gönderildi!','ok');try{window.coinPull&&window.coinPull()}catch(e){}},250);
+  close()}).catch(function(x){go.disabled=false;toast2(errTxt(x),'err')})}
+
+document.addEventListener('click',function(e){
+ var g=e.target.closest&&e.target.closest('[data-gift]');if(g){e.preventDefault();e.stopPropagation();try{window.coinPull&&window.coinPull()}catch(x){}draw();return}
+ var b=e.target.closest&&e.target.closest('[data-gf]');if(!b)return;var a=b.dataset.gf;
+ if(a==='x')close();else if(a==='prev')playPrev();
+ else if(a==='k'){G.k=b.dataset.k;draw();playPrev()}
+ else if(a==='a'){G.a=+b.dataset.a;draw()}
+ else if(a==='send')send();
+ else if(a==='claim'){var m=b.closest('.gfMsg'),id=b.dataset.id,k=m.dataset.k,am=+m.dataset.a;b.disabled=true;
+  rpc('budd_gift_claim',{p_ref:id}).then(function(){var d=J('budd_gift_done',{});d[id]=am;W('budd_gift_done',d);m.querySelector('.gfCard').classList.add('open');b.textContent='🪙 +'+am+' kazandın!';b.classList.add('dn');try{window.coinPull&&window.coinPull()}catch(x){}})
+  .catch(function(x){b.disabled=false;toast2(errTxt(x),'err')})}
+},true);
+
+/* mesajdaki hediye kartları */
+var RX=/^\[\[gift:(box|chest|pouch|star):(\d{1,5}):([a-z0-9]{4,16})\]\]$/;
+function scan(){var sent=J('budd_gift_sent',[]),done=J('budd_gift_done',{});
+ document.querySelectorAll('#msgs .dcTx:not([data-gf])').forEach(function(n){var m=RX.exec((n.textContent||'').trim());n.setAttribute('data-gf','1');if(!m)return;
+  var k=m[1],a=+m[2],id=m[3],mine=sent.indexOf(id)>=0,dn=done[id]!=null;
+  n.innerHTML='<div class="gfMsg" data-k="'+k+'" data-a="'+a+'">'+card(k,a,dn?'open':'')+(mine?'<button class="gfAct dn" disabled>🎁 Hediye gönderdin</button>':dn?'<button class="gfAct dn" disabled>🪙 +'+a+' alındı</button>':'<button class="gfAct" data-gf="claim" data-id="'+id+'">🎁 Hediyeyi aç</button>')+'</div>'})}
+var mo=new MutationObserver(scan);function hook(){var m=$('#msgs');if(m){mo.observe(m,{childList:true,subtree:true});scan()}else setTimeout(hook,500)}hook();
+})();</script>
 </body>
 </html>
