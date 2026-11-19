@@ -12051,7 +12051,7 @@ PL.tt=['TikTok',/^https:\/\/(www\.)?tiktok\.com\/@[\w.]+/i];PL.rd=['Reddit',/^ht
 var BR={yt:['#ff0000','▶'],tw:['#9146ff','T'],st:['#1b2838','S'],gh:['#24292f','G'],ig:['#e1306c','I'],x:['#000','X'],tt:['#fe2c55','♪'],rd:['#ff4500','R'],sp:['#1db954','S'],fb:['#1877f2','f'],xb:['#107c10','X'],bs:['#1185ff','B']};
 var SI={yt:'youtube',tw:'twitch',st:'steam',gh:'github',ig:'instagram',x:'x',tt:'tiktok',rd:'reddit',sp:'spotify',fb:'facebook',xb:'xbox',bs:'bluesky'},CL={yt:'#ff0000',tw:'#9146ff',st:'#c7d5e0',gh:'#ffffff',ig:'#e4405f',x:'#ffffff',tt:'#ffffff',rd:'#ff4500',sp:'#1db954',fb:'#1877f2',xb:'#52b043',bs:'#1185fe'};
 function ico(p,z){var u='https://cdn.jsdelivr.net/npm/simple-icons@11.14.0/icons/'+(SI[p]||p)+'.svg',w=Math.round(z*.78);return'<span class="v73i" style="width:'+z+'px;height:'+z+'px;background:transparent"><span style="display:block;width:'+w+'px;height:'+w+'px;background:'+(CL[p]||'#fff')+';-webkit-mask:url('+u+') center/contain no-repeat;mask:url('+u+') center/contain no-repeat"></span></span>'}
-var SVG=function(p,z){return'<svg viewBox="0 0 24 24" width="'+z+'" height="'+z+'" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg>'},ARW=SVG('<path d="M7 17 17 7"/><path d="M8 7h9v9"/>',18),XX=SVG('<path d="M6 6l12 12"/><path d="M18 6 6 18"/>',16),CK='<span style="display:inline-flex;flex:none" title="Doğrulanmış"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="currentColor"/><path d="M7.500 12.500l3 3 6-6.500" fill="none" stroke="currentColor" stroke-width="2.400" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
+var SVG=function(p,z){return'<svg viewBox="0 0 24 24" width="'+z+'" height="'+z+'" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+p+'</svg>'},ARW=SVG('<path d="M7 17 17 7"/><path d="M8 7h9v9"/>',18),XX=SVG('<path d="M6 6l12 12"/><path d="M18 6 6 18"/>',16),CK='<span style="display:inline-flex;flex:none" title="Doğrulanmış"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#dbdee1"/><path d="M7.500 12.500l3 3 6-6.500" fill="none" stroke="#1e1f22" stroke-width="2.400" stroke-linecap="round" stroke-linejoin="round"/></svg></span>';
 /* profil kartı: Discord tarzı bağlantı satırları */
 window.lkHtml=function(l){l=window.lkClean?window.lkClean(l):[];if(!l.length)return'';return'<hr><h6>BAĞLANTILAR</h6><div class="v73c">'+l.map(function(x){return'<a class="v73r" href="'+E(x.u)+'" target="_blank" rel="noopener noreferrer nofollow">'+ico(x.p,24)+'<b>'+E(x.n||PL[x.p][0])+'</b>'+(x.v?CK:'')+'<span class="x">'+ARW+'</span></a>'}).join('')+'</div>'};
 /* ===== Ayarlar > Bağlantılar ===== */
@@ -12416,7 +12416,7 @@ var QS=[
 ];
 window.v90QS=QS;
 var BOLT='<g fill="currentColor" stroke="none"><path d="M13.3 2 4.6 13.5h6l-.9 8.5 9.7-12.2h-6.2z"/></g>';
-var BIG='<svg class="big" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="v90g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe27a"/><stop offset="1" stop-color="#ff8a3d"/></linearGradient></defs><path d="M32 3 58 18v28L32 61 6 46V18z" fill="#ffffff22" stroke="#ffffff66" stroke-width="2" stroke-linejoin="round"/><path d="M35.5 10 18 35h12l-2.5 19L46 28H34z" fill="url(#v90g)" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>';
+var BIG='<svg class="big" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="v90g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe27a"/><stop offset="1" stop-color="#ff8a3d"/></linearGradient></defs><path d="M32 3 58 18v28L32 61 6 46V18z" fill="#ffffff22" stroke="#ffffff66" stroke-width="2" stroke-linejoin="round"/><path d="M35.5 10 18 35h12l-2.5 19L46 28H34z" fill="url(#v90g)" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>';
 function fmt(t){return new Date(t).toLocaleDateString('tr-TR',{day:'numeric',month:'long',year:'numeric'})}
 function boostRender(){if(window.coinRender)return window.coinRender();var P=$('#sPage');if(!P)return;var q=qb(),st=(window.v76St&&v76St())||{},su=+st.until||0,until=Math.max(q.u,su),act=st.admin||until>Date.now();
  var done=QS.filter(function(x){return q.d[x.id]}).length;
@@ -13649,7 +13649,7 @@ html[data-mode="light"] .vu .vmi{color:#5b6070!important}
  function plain(body){return '<svg class="dI" viewBox="0 0 24 24"><g fill="currentColor" stroke="none">'+body+'</g></svg>'}
  function slashed(body,st){
   var id='dm'+(++n);
-  return '<svg class="dI" viewBox="0 0 24 24"><defs><mask id="'+id+'" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24"><rect width="24" height="24" fill="currentColor" stroke="none"/><path class="sk '+st+'" pathLength="1" d="'+LN+'" fill="none" stroke="currentColor" stroke-width="4.6" stroke-linecap="round"/></mask></defs><g mask="url(#'+id+')" fill="currentColor" stroke="none">'+body+'</g><path class="sl '+st+'" pathLength="1" d="'+LN+'" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
+  return '<svg class="dI" viewBox="0 0 24 24"><defs><mask id="'+id+'" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24"><rect width="24" height="24" fill="#fff" stroke="none"/><path class="sk '+st+'" pathLength="1" d="'+LN+'" fill="none" stroke="#000" stroke-width="4.6" stroke-linecap="round"/></mask></defs><g mask="url(#'+id+')" fill="currentColor" stroke="none">'+body+'</g><path class="sl '+st+'" pathLength="1" d="'+LN+'" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
  }
  window.__dI={
   mic:function(muted){
@@ -13750,18 +13750,18 @@ circleplus:F('<path '+EO+' d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 5.500v3
 folderplus:F('<path '+EO+' d="M3 7a3 3 0 0 1 3-3h3.600c.5 0 1 .2 1.400.6L12.400 6H18a3 3 0 0 1 3 3v8a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3zm9.900 3.400h-1.800v2.100H9v1.800h2.100v2.100h1.800v-2.100H15v-1.800h-2.100z"/>'),
 shield:F('<path '+EO+' d="M12 2.200l7.500 2.600v6.400c0 4.400-3 8.200-7.500 10.400-4.500-2.200-7.500-6-7.500-10.400V4.800zM13 5.700v12.800c2.900-1.700 4.500-4.200 4.500-7.300V7.100z"/>'),
 bell:F(bell),
-bellslash:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><mask id="dBsM"><rect width="24" height="24" fill="currentColor"/><path d="M3 2.500l18 19" stroke="currentColor" stroke-width="5" stroke-linecap="round"/></mask><g mask="url(#dBsM)">'+bell+'</g><path d="M4 3.500l16 17" stroke="currentColor" stroke-width="2.300" stroke-linecap="round" fill="none"/></svg>',
+bellslash:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><mask id="dBsM"><rect width="24" height="24" fill="#fff"/><path d="M3 2.500l18 19" stroke="#000" stroke-width="5" stroke-linecap="round"/></mask><g mask="url(#dBsM)">'+bell+'</g><path d="M4 3.500l16 17" stroke="currentColor" stroke-width="2.300" stroke-linecap="round" fill="none"/></svg>',
 pencil:F('<path d="M16.300 3.700a2.400 2.400 0 0 1 3.400 0l.3.3a2.400 2.400 0 0 1 0 3.400L8.900 18.500l-5.100 1.400a.8.8 0 0 1-1-1l1.400-5.100z"/>'),
 copy:F('<path d="M6.500 2.500h7A2.500 2.500 0 0 1 16 5H8.500A3.500 3.500 0 0 0 5 8.500V16a2.500 2.500 0 0 1-2-2.500V6a3.500 3.500 0 0 1 3.500-3.500z"/><rect x="7.500" y="6.500" width="13.500" height="15" rx="3"/>'),
 clock:F('<path '+EO+' d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 5a1 1 0 0 1 2 0v4.600l3 1.900a1 1 0 1 1-1.100 1.700l-3.500-2.200a1 1 0 0 1-.4-.8z"/>'),
 image:F('<path '+EO+' d="M6 3h12a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V6a3 3 0 0 1 3-3zm2.500 4a1.800 1.800 0 1 0 0 3.600 1.800 1.800 0 0 0 0-3.600zM5 18.500h14l-4.200-5.600-3 3.800-1.900-2.400z"/>'),
 smile:F('<path '+EO+' d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM8.800 8.600a1.300 1.300 0 1 1 0 2.600 1.300 1.300 0 0 1 0-2.600zm6.400 0a1.300 1.300 0 1 1 0 2.600 1.300 1.300 0 0 1 0-2.600zM7.700 14.200c.4-.2.9-.1 1.100.3a3.600 3.600 0 0 0 6.400 0c.2-.4.7-.5 1.100-.3.4.2.5.7.3 1.100a5.200 5.200 0 0 1-9.200 0c-.2-.4-.1-.9.3-1.100z"/>'),
-smileplus:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><mask id="dSpM"><rect width="24" height="24" fill="currentColor"/><circle cx="18.500" cy="5.500" r="5" fill="currentColor"/></mask><path mask="url(#dSpM)" '+EO+' d="M11 4a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM7.900 10.300a1.200 1.200 0 1 1 0 2.400 1.200 1.200 0 0 1 0-2.400zm6.200 0a1.200 1.200 0 1 1 0 2.400 1.200 1.200 0 0 1 0-2.400zM7 15.200c.4-.2.8-.1 1 .3a3.300 3.300 0 0 0 6 0c.2-.4.6-.5 1-.3.4.2.5.6.3 1a4.900 4.900 0 0 1-8.600 0c-.2-.4-.1-.8.3-1z"/><path d="M18.500 1.800a1 1 0 0 1 1 1v1.700h1.700a1 1 0 1 1 0 2h-1.700v1.700a1 1 0 1 1-2 0V6.500h-1.700a1 1 0 1 1 0-2h1.700V2.800a1 1 0 0 1 1-1z"/></svg>',
+smileplus:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><mask id="dSpM"><rect width="24" height="24" fill="#fff"/><circle cx="18.500" cy="5.500" r="5" fill="#000"/></mask><path mask="url(#dSpM)" '+EO+' d="M11 4a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM7.900 10.300a1.200 1.200 0 1 1 0 2.400 1.200 1.200 0 0 1 0-2.400zm6.200 0a1.200 1.200 0 1 1 0 2.400 1.200 1.200 0 0 1 0-2.400zM7 15.200c.4-.2.8-.1 1 .3a3.300 3.300 0 0 0 6 0c.2-.4.6-.5 1-.3.4.2.5.6.3 1a4.900 4.900 0 0 1-8.600 0c-.2-.4-.1-.8.3-1z"/><path d="M18.500 1.800a1 1 0 0 1 1 1v1.700h1.700a1 1 0 1 1 0 2h-1.700v1.700a1 1 0 1 1-2 0V6.500h-1.700a1 1 0 1 1 0-2h1.700V2.800a1 1 0 0 1 1-1z"/></svg>',
 reply:F('<path d="M9.600 4.300a1.200 1.200 0 0 1 0 1.700L6.800 8.800H14a7 7 0 0 1 7 7V19a1.200 1.200 0 1 1-2.400 0v-3.200a4.600 4.600 0 0 0-4.600-4.600H6.800l2.800 2.800a1.200 1.200 0 1 1-1.700 1.700L3.500 10a1.200 1.200 0 0 1 0-1.700l4.400-4a1.200 1.200 0 0 1 1.700 0z"/>'),
 link:F('<g transform="rotate(-45 12 12)"><path d="M2.500 12a4 4 0 0 1 4-4h4.500v2.400H6.500a1.600 1.600 0 0 0 0 3.200H11V16H6.500a4 4 0 0 1-4-4z"/><path d="M21.500 12a4 4 0 0 1-4 4H13v-2.400h4.500a1.600 1.600 0 0 0 0-3.200H13V8h4.500a4 4 0 0 1 4 4z"/><rect x="8.500" y="10.800" width="7" height="2.400" rx="1.200"/></g>'),
 pin:F('<path d="M15.200 2.900a1.300 1.300 0 0 1 1.800 0l4.100 4.100a1.300 1.300 0 0 1 0 1.800l-.9.900-2.600.2-2.500 2.800.3 3.700a1 1 0 0 1-.3.800l-.7.700-4.400-4.400-5.600 5.600a.8.800 0 0 1-1.100-1.100l5.600-5.600-4.400-4.400.7-.7a1 1 0 0 1 .8-.3l3.700.3 2.800-2.500.2-2.600z"/>'),
 trash:F('<path d="M9 2.500h6A1.500 1.500 0 0 1 16.500 4v.5H20a1 1 0 1 1 0 2H4a1 1 0 0 1 0-2h3.500V4A1.500 1.500 0 0 1 9 2.500z"/><path '+EO+' d="M5.500 8.500h13l-.8 11.200a2.500 2.500 0 0 1-2.500 2.300H8.800a2.500 2.500 0 0 1-2.500-2.300zm4 2.500v7a.9.9 0 0 0 1.800 0v-7a.9.9 0 0 0-1.800 0zm3.200 0v7a.9.9 0 0 0 1.800 0v-7a.9.9 0 0 0-1.800 0z"/>'),
-id:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><mask id="dIdM"><rect width="24" height="24" fill="currentColor"/><text x="12" y="15.800" text-anchor="middle" font-size="10.500" font-weight="800" font-family="Arial,sans-serif" fill="currentColor">ID</text></mask><rect x="2.500" y="4" width="19" height="16" rx="4" mask="url(#dIdM)"/></svg>',
+id:'<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><mask id="dIdM"><rect width="24" height="24" fill="#fff"/><text x="12" y="15.800" text-anchor="middle" font-size="10.500" font-weight="800" font-family="Arial,sans-serif" fill="#000">ID</text></mask><rect x="2.500" y="4" width="19" height="16" rx="4" mask="url(#dIdM)"/></svg>',
 sticker:F('<path '+EO+' d="M7 3h10a4 4 0 0 1 4 4v6.500h-3.500A4.500 4.500 0 0 0 13 18v3H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4zm1.600 3.800a1.200 1.200 0 1 0 0 2.400 1.200 1.200 0 0 0 0-2.400zm4.800 0a1.200 1.200 0 1 0 0 2.400 1.200 1.200 0 0 0 0-2.400zM8 11.800a.8.800 0 0 0-.7 1.200 3.600 3.600 0 0 0 6.200 0 .8.800 0 0 0-1.400-.8 2 2 0 0 1-3.400 0 .8.800 0 0 0-.7-.4z"/><path d="M21 15.500v1.600a3.900 3.900 0 0 1-3.900 3.900H15v-2.500a3 3 0 0 1 3-3z"/>')
 };
 var HASH='<svg class="hb" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.300" stroke-linecap="round"><path d="M10 3.500 8 20.500M16.500 3.500l-2 17M4 9h17M3 15.500h17"/></svg>';
@@ -14783,7 +14783,7 @@ window.buddIsMod=function(){return mine.indexOf('owner')>=0||mine.indexOf('mod')
 /* Rozet simgeleri: kendi çizimimiz, kavisli düz stil */
 var GR={};
 function rp(d,c,w){return '<path d="'+d+'" fill="'+c+'" stroke="'+c+'" stroke-width="'+(w||2.4)+'" stroke-linejoin="round"/>'}
-var WG=rp('M5.9 9.2h4.2l1.9 2.7 1.9-2.7h4.2L12 17z','#fff',2)+'<path d="M12 11.9l1.9-2.7h-3.8z" fill="currentColor" fill-opacity=".13"/>';
+var WG=rp('M5.9 9.2h4.2l1.9 2.7 1.9-2.7h4.2L12 17z','#fff',2)+'<path d="M12 11.9l1.9-2.7h-3.8z" fill="#000" fill-opacity=".13"/>';
 var HEX='M12 3.1l7.9 4.55v8.7L12 20.9l-7.9-4.55v-8.7z';
 function net(ring,bag,mesh,id){var BP='M5.900 14.200C4.500 8 7.400 2.700 12 2.700s7.500 5.300 6.100 11.500c-1.800 2.100-10.400 2.100-12.200 0z';return '<defs><clipPath id="'+id+'"><path d="'+BP+'"/></clipPath></defs><g transform="rotate(38 12 12)"><path d="M12 16.500V22.800" stroke="'+ring+'" stroke-width="2.600" stroke-linecap="round"/><path d="'+BP+'" fill="'+bag+'"/><g clip-path="url(#'+id+')" stroke="'+mesh+'" stroke-width=".75" fill="none" stroke-linecap="round"><path d="M2 2l20 20M2 7l20 20M2 -3l20 20M2 12l20 20M22 2L2 22M22 7L2 27M22 -3L2 17M22 12L2 32"/></g><path d="M5.900 14.200C4.500 8 7.400 2.700 12 2.700s7.500 5.300 6.100 11.500" fill="none" stroke="'+ring+'" stroke-width="1.700" stroke-linecap="round"/><ellipse cx="12" cy="14.200" rx="6.100" ry="2.400" fill="'+ring+'" fill-opacity=".3" stroke="'+ring+'" stroke-width="1.800"/></g>'}
 var BG=[
@@ -14877,7 +14877,7 @@ var BBG=[
 var BM={};BG.forEach(function(b){BM[b.id]=b});BBG.forEach(function(b){BM[b.id]=b});
 function ico(b){return '<svg viewBox="'+(b.v||'0 0 24 24')+'" aria-hidden="true">'+b.s+'</svg>'}
 
-var TICK='<svg class="vfT" viewBox="0 0 24 24" role="img" aria-label="Doğrulanmış"><path fill="currentColor" d="M22.5 12.5l-2.1-2.4.3-3.2-3.1-.7-1.6-2.8-3 1.2-3-1.2-1.6 2.8-3.1.7.3 3.2-2.1 2.4 2.1 2.4-.3 3.2 3.1.7 1.6 2.8 3-1.2 3 1.2 1.6-2.8 3.1-.7-.3-3.2z"/><path fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M8 12.4l2.7 2.7 5.5-5.7"/></svg>';
+var TICK='<svg class="vfT" viewBox="0 0 24 24" role="img" aria-label="Doğrulanmış"><path fill="#1d9bf0" d="M22.5 12.5l-2.1-2.4.3-3.2-3.1-.7-1.6-2.8-3 1.2-3-1.2-1.6 2.8-3.1.7.3 3.2-2.1 2.4 2.1 2.4-.3 3.2 3.1.7 1.6 2.8 3-1.2 3 1.2 1.6-2.8 3.1-.7-.3-3.2z"/><path fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" d="M8 12.4l2.7 2.7 5.5-5.7"/></svg>';
 var css=document.createElement('style');
 css.textContent='.vfT{display:inline-block;width:1.08em;height:1.08em;min-width:14px;min-height:14px;margin-left:.3em;vertical-align:-.2em;align-self:center;flex:none;position:relative}'
 +'.vfBg{position:absolute;z-index:5;box-sizing:border-box;display:flex;align-items:center;justify-content:center;gap:3px;height:30px;min-width:30px;padding:0 6px;border-radius:10px;background:oklch(from #23262e calc(l + var(--lm,0)*(min(.99,.855 + (l - .18)*.86) - l)) calc(c + (var(--cc,0) - c)*var(--tm,0)) calc(h + (var(--hue,0) - h)*var(--tm,0)));box-shadow:inset 0 0 0 1px rgb(from var(--ovc,#ffffff) r g b / 0.078),0 4px 12px #0007}'
@@ -15121,7 +15121,7 @@ var CSS=document.createElement('style');CSS.textContent=
 +'.v90bQ .cqR{padding:8px 10px;cursor:pointer!important;background:transparent!important;color:inherit!important;opacity:.6}.v90bQ .cqR:hover{opacity:1}'
 +'.v90bQ .pl.cq{background:#f0b23222;color:#f0b232}';
 document.head.appendChild(CSS);
-var COINSVG='<svg class="big" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="cqg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe27a"/><stop offset="1" stop-color="#f0a020"/></linearGradient></defs><circle cx="32" cy="32" r="26" fill="url(#cqg)" stroke="currentColor" stroke-width="2"/><circle cx="32" cy="32" r="19" fill="none" stroke="currentColor" stroke-width="2"/><path d="M27 20h9a5 5 0 0 1 2.2 9.5A5.5 5.5 0 0 1 36 40h-9z M32 25v4h3a2 2 0 0 0 0-4z M32 33v3.5h4a1.8 1.8 0 0 0 0-3.5z" fill="currentColor" fill-rule="evenodd"/></svg>';
+var COINSVG='<svg class="big" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="cqg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe27a"/><stop offset="1" stop-color="#f0a020"/></linearGradient></defs><circle cx="32" cy="32" r="26" fill="url(#cqg)" stroke="#fff" stroke-width="2"/><circle cx="32" cy="32" r="19" fill="none" stroke="#fff8" stroke-width="2"/><path d="M27 20h9a5 5 0 0 1 2.2 9.5A5.5 5.5 0 0 1 36 40h-9z M32 25v4h3a2 2 0 0 0 0-4z M32 33v3.5h4a1.8 1.8 0 0 0 0-3.5z" fill="#fff" fill-rule="evenodd"/></svg>';
 function shopOpen(){var o=null;try{typeof openSet==='function'?openSet('prof'):window.__B.page('prof')}catch(e){try{window.__B.page('prof')}catch(x){}}
  var n=0,iv=setInterval(function(){var b=document.getElementById('dcOpen');if(b){clearInterval(iv);b.click()}else if(++n>25)clearInterval(iv)},200)}
 function render(){var P=document.getElementById('sPage');if(!P||!P.querySelector('[data-coinhub]'))return;draw(P)}
@@ -15340,6 +15340,11 @@ html[data-mode="light"] .gifF input{background:#e3e5e8}
 .gfF{background:#16171a}.gfF .go{background:#fff;color:#111;border-radius:8px}.gfF button{border-radius:8px}
 .gfAct{background:#fff;color:#111;border-radius:8px;font-weight:600}.gfAct:disabled,.gfAct.dn{background:#2b2d31;color:#949ba4}
 .gfCard.th *{animation-play-state:running!important}
+
+.gfPv{font-size:16px;color:#dbdee1}.gfPv b{color:#fff}
+.gfMsg{width:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:2px 0;padding:8px 12px;border-left:3px solid #5865f2;background:#ffffff08;border-radius:4px;font-size:15px;color:#dbdee1}
+.gfMsg b{color:#fff;font-weight:600}.gfOk{font-size:13px;color:#949ba4}
+.gfAct{margin:0;padding:5px 14px;font-size:13px}
 </style>
 <script id="ucGfJs">(function(){
 "use strict";
@@ -15352,9 +15357,9 @@ function isOpen(id){var p=document.getElementById(id);return !!(p&&p.classList.c
 
 /* ===== 1) Sekmeler: Emoji / Çıkartma / GIF (animasyonlu svg ikonlar) ===== */
 var IC={
-emj:'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="currentColor"/><g class="te"><ellipse cx="8.6" cy="10" rx="1.4" ry="1.9" fill="currentColor"/><ellipse cx="15.4" cy="10" rx="1.4" ry="1.9" fill="currentColor"/></g><path class="tm" d="M7.6 14.3c1 2.6 7.800 2.600 8.800 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>',
-stk:'<svg viewBox="0 0 24 24"><path d="M5 3h10a4 4 0 0 1 4 4v7l-5 5H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z" fill="currentColor"/><g class="te"><circle cx="8.600" cy="9" r="1.400" fill="currentColor"/><circle cx="13.400" cy="9" r="1.400" fill="currentColor"/></g><path class="tm" d="M7.800 12.600c.9 2 4.500 2 5.400 0" fill="none" stroke="currentColor" stroke-width="1.700" stroke-linecap="round"/><path class="tfl" d="M19 14l-5 5v-3a2 2 0 0 1 2-2z" fill="currentColor"/></svg>',
-gif:'<svg viewBox="0 0 24 24"><rect x="1.500" y="4.500" width="21" height="15" rx="4.500" fill="currentColor"/><text class="l1" x="6.200" y="15.200" text-anchor="middle" font-size="7.500" font-weight="800" fill="currentColor" font-family="Arial,sans-serif">G</text><text class="l2" x="12" y="15.200" text-anchor="middle" font-size="7.500" font-weight="800" fill="currentColor" font-family="Arial,sans-serif">I</text><text class="l3" x="17.600" y="15.200" text-anchor="middle" font-size="7.500" font-weight="800" fill="currentColor" font-family="Arial,sans-serif">F</text></svg>'};
+emj:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.800" stroke-linecap="round"><circle cx="12" cy="12" r="9.500"/><g class="te"><path d="M8.800 9.500v1.400M15.200 9.500v1.400"/></g><path class="tm" d="M8 14.200c1.200 2.200 6.800 2.200 8 0"/></svg>',
+stk:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.800" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3.500h10a4.500 4.500 0 0 1 4.500 4.500v6.500l-5.500 6H5a2 2 0 0 1-2-2V5.500a2 2 0 0 1 2-2z"/><g class="te"><path d="M8.600 9v1.200M13.400 9v1.200"/></g><path class="tm" d="M8 13c1 1.800 4.200 1.800 5.200 0"/><path class="tfl" d="M19.500 14.500l-5.500 6v-3.500a2.500 2.500 0 0 1 2.500-2.500z"/></svg>',
+gif:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.800"><rect x="1.800" y="4.500" width="20.400" height="15" rx="4"/><text class="l1" x="6.600" y="15" text-anchor="middle" font-size="7" font-weight="800" fill="currentColor" stroke="none" font-family="Arial,sans-serif">G</text><text class="l2" x="12" y="15" text-anchor="middle" font-size="7" font-weight="800" fill="currentColor" stroke="none" font-family="Arial,sans-serif">I</text><text class="l3" x="17.400" y="15" text-anchor="middle" font-size="7" font-weight="800" fill="currentColor" stroke="none" font-family="Arial,sans-serif">F</text></svg>'};
 var NM={emj:'Emoji',stk:'Çıkartma',gif:'GIF'};
 function strip(a){return '<div class="ucTabs">'+['emj','stk','gif'].map(function(k){return '<button type="button" data-uc="'+k+'" class="'+(k===a?'on pl':'')+'">'+IC[k]+NM[k]+'</button>'}).join('')+'</div>'}
 function ensure(){[['emjPop','emj'],['stkPop','stk'],['gifPop','gif']].forEach(function(x){var p=document.getElementById(x[0]);
@@ -15493,12 +15498,11 @@ function ov(){var o=document.getElementById('gfOv');if(!o){o=document.createElem
 function close(){var o=document.getElementById('gfOv');if(o)o.classList.remove('open')}
 function bal(){try{return window.coinBalance?window.coinBalance():0}catch(e){return 0}}
 var PLAY='<svg viewBox="0 0 24 24"><path d="M5 3.500v17a1 1 0 0 0 1.500.9l14-8.500a1 1 0 0 0 0-1.800l-14-8.500A1 1 0 0 0 5 3.500z"/></svg>';
-function draw(){var o=ov(),n=bal(),b;
- if(G.step===1)b='<div class="gfB"><div id="gfPv" style="width:100%">'+card(G.k,0)+'</div><div class="gfThumbs">'+KINDS.map(function(x){return '<button type="button" data-gf="k" data-k="'+x[0]+'" class="'+(x[0]===G.k?'on':'')+'" title="'+x[1]+'">'+card(x[0],0,'th')+'</button>'}).join('')+'</div></div><div class="gfF"><button type="button" data-gf="x">Vazgeç</button><button type="button" class="go" data-gf="next">İleri</button></div>';
- else b='<div class="gfB"><div id="gfPv" style="width:min(340px,100%)">'+card(G.k,G.a)+'</div><div class="gfRow">'+[25,50,100,250,500].map(function(v){return '<button type="button" data-gf="a" data-a="'+v+'" class="'+(v===G.a?'on':'')+'">'+v+'</button>'}).join('')+'</div><input class="gfIn" id="gfAmtIn" type="number" inputmode="numeric" min="1" max="5000" value="'+G.a+'" placeholder="Miktar"><div class="gfBal">Bakiyen: '+Math.round(n).toLocaleString('tr-TR')+'</div></div><div class="gfF"><button type="button" data-gf="back">Geri</button><button type="button" class="go" data-gf="send" id="gfGo">Gönder</button></div>';
+function draw(){var o=ov(),n=bal();
+ var b='<div class="gfB"><div class="gfPv">🎁 <b>Budd Coin</b> hediye et</div><div class="gfRow">'+[25,50,100,250,500].map(function(v){return '<button type="button" data-gf="a" data-a="'+v+'" class="'+(v===G.a?'on':'')+'">'+v+'</button>'}).join('')+'</div><input class="gfIn" id="gfAmtIn" type="number" inputmode="numeric" min="1" max="5000" value="'+G.a+'" placeholder="Miktar"><div class="gfBal">Bakiyen: '+Math.round(n).toLocaleString('tr-TR')+'</div></div><div class="gfF"><button type="button" data-gf="x">Vazgeç</button><button type="button" class="go" data-gf="send" id="gfGo">Gönder</button></div>';
  o.innerHTML='<div class="gfM"><div class="gfH"><span>Hediye Gönder</span><button type="button" data-gf="x">✕</button></div>'+b+'</div>';
  o.classList.add('open');
- var i=document.getElementById('gfAmtIn');if(i)i.oninput=function(){G.a=Math.max(0,Math.min(5000,Math.floor(+i.value||0)));var am=o.querySelector('.gfAmt');if(am)am.textContent=G.a+' Coin';o.querySelectorAll('[data-gf="a"]').forEach(function(x){x.classList.toggle('on',+x.dataset.a===G.a)})}}
+ var i=document.getElementById('gfAmtIn');if(i)i.oninput=function(){G.a=Math.max(0,Math.min(5000,Math.floor(+i.value||0)));o.querySelectorAll('[data-gf="a"]').forEach(function(x){x.classList.toggle('on',+x.dataset.a===G.a)})}}
 function playPrev(){var pv=document.getElementById('gfPv');if(!pv)return;pv.classList.remove('open');void pv.offsetWidth;pv.classList.add('open');setTimeout(function(){pv.classList.remove('open')},3200)}
 
 var SBU='https://ghczuzeswnofeklulver.supabase.co',KP='sb_publishable_uVbPX6KEfMwbuUq0-TRqEQ_jIcMge0D',SK='sb-ghczuzeswnofeklulver-auth-token';
@@ -15521,24 +15525,25 @@ function send(){var a=G.a,k=G.k;if(a<1)return toast2('Miktar gir','err');
   close()}).catch(function(x){go.disabled=false;toast2(errTxt(x),'err')})}
 
 document.addEventListener('click',function(e){
- var g=e.target.closest&&e.target.closest('[data-gift]');if(g){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();try{window.coinPull&&window.coinPull()}catch(x){}G.step=1;draw();setTimeout(playPrev,200);return}
+ var g=e.target.closest&&e.target.closest('[data-gift]');if(g){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();try{window.coinPull&&window.coinPull()}catch(x){}draw();return}
  var b=e.target.closest&&e.target.closest('[data-gf]');if(!b)return;e.preventDefault();e.stopPropagation();var a=b.dataset.gf;
  if(a==='x')close();else if(a==='prev')playPrev();
- else if(a==='k'){G.k=b.dataset.k;draw();playPrev()}
+ 
  else if(a==='next'){G.step=2;draw()}else if(a==='back'){G.step=1;draw()}
  else if(a==='a'){G.a=+b.dataset.a;draw()}
  else if(a==='send')send();
  else if(a==='claim'){var m=b.closest('.gfMsg'),id=b.dataset.id,am=+m.dataset.a;b.disabled=true;
-  var fin=function(real){var d=J('budd_gift_done',{});d[id]=am;W('budd_gift_done',d);m.querySelector('.gfCard').classList.add('open');b.textContent=real?'🪙 +'+am+' kazandın!':'🎁 Açıldı';b.classList.add('dn');try{window.coinPull&&window.coinPull()}catch(x){}};
+  var fin=function(real){var d=J('budd_gift_done',{});d[id]=am;W('budd_gift_done',d);b.textContent='Alındı';b.classList.add('dn');try{window.coinPull&&window.coinPull()}catch(x){}};
   rpc('budd_gift_claim',{p_ref:id}).then(function(){fin(1)},function(x){if(missing(x)||J('budd_gift_cos',[]).indexOf(id)>=0)fin(0);else{b.disabled=false;toast2(errTxt(x),'err')}})}
 },true);
 
 /* mesajdaki hediye kartları */
 var RX=/^\[\[gift[:=](box|chest|cocoa|buddy|pouch|star)[:=](\d{1,5})[:=]([a-z0-9]{4,16})\]\]$/;
+function who(n){var e=n.closest('.dcMsg');while(e){var nm=e.querySelector&&e.querySelector('.dcNm');if(nm)return nm.textContent.trim();e=e.previousElementSibling}return 'Biri'}
 function scan(){var sent=J('budd_gift_sent',[]),done=J('budd_gift_done',{});
  document.querySelectorAll('#msgs .dcTx:not([data-gf])').forEach(function(n){var m=RX.exec((n.textContent||'').trim());n.setAttribute('data-gf','1');if(!m)return;
-  var k=nk(m[1]),a=+m[2],id=m[3],mine=sent.indexOf(id)>=0,dn=done[id]!=null;
-  n.innerHTML='<div class="gfMsg" data-k="'+k+'" data-a="'+a+'">'+card(k,a,dn?'open':'')+(mine?'<button class="gfAct dn" disabled>🎁 Hediye gönderdin</button>':dn?'<button class="gfAct dn" disabled>🎁 Hediye alındı</button>':'<button class="gfAct" data-gf="claim" data-id="'+id+'">🎁 Hediyeyi aç</button>')+'</div>'})}
+  var a=+m[2],id=m[3],mine=sent.indexOf(id)>=0,dn=done[id]!=null;
+  n.innerHTML='<div class="gfMsg" data-a="'+a+'"><span class="gfT">🎁 '+(mine?'Sen <b>'+a+'</b> adet buddcoin gönderdin!':'<b>'+esc(who(n))+'</b> sana <b>'+a+'</b> adet buddcoin gönderdi!')+'</span>'+(mine?'':dn?'<span class="gfOk">Alındı</span>':'<button class="gfAct" data-gf="claim" data-id="'+id+'">Al</button>')+'</div>'})}
 function all(){try{scan()}catch(e){}try{scanGif()}catch(e){}}
 var mo=new MutationObserver(all);function hook(){var m=$('#msgs');if(m){mo.observe(m,{childList:true,subtree:true});all()}else setTimeout(hook,500)}hook();
 })();</script>
