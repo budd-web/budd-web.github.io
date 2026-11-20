@@ -15405,27 +15405,28 @@ document.addEventListener('click',function(e){var b=e.target.closest&&e.target.c
 
 /* ===== 2) GIF (dosya değil, kaynak linki gider) ===== */
 var GQ=0;
-function GK(){try{return localStorage.getItem('budd_giphy')||'dc6zaTOxFJmzC'}catch(e){return 'dc6zaTOxFJmzC'}}
+var KLIPY_KEY='';/* sahibi: klipy.com/docs'tan alınan ücretsiz anahtarı buraya yaz */
+function GK(){try{return KLIPY_KEY||localStorage.getItem('budd_klipy')||''}catch(e){return KLIPY_KEY}}
 function gifEl(){var p=document.getElementById('gifPop');if(!p){p=document.createElement('div');p.id='gifPop';document.body.appendChild(p);var b=document.createElement('div');b.id='gifBk';b.onclick=gifClose;document.body.appendChild(b)}return p}
 function gifClose(){var p=document.getElementById('gifPop'),b=document.getElementById('gifBk');if(p)p.classList.remove('open');if(b)b.classList.remove('open')}
 function gifOpen(){var p=gifEl(),b=document.getElementById('gifBk'),r=SW.rect;
  p.removeAttribute('style');
  if(r&&r.width){p.style.left=r.left+'px';p.style.top=r.top+'px';p.style.width=r.width+'px';p.style.height=r.height+'px'}
  else{var d=$('.dcRi'),q=d?d.getBoundingClientRect():{right:innerWidth-10,top:innerHeight-60},h=Math.min(430,innerHeight-20),w=400;p.style.width=w+'px';p.style.height=h+'px';p.style.left=Math.max(10,Math.min(innerWidth-w-10,q.right-w))+'px';p.style.top=Math.max(10,q.top-h-10)+'px'}
- p.innerHTML=strip('gif')+'<div class="gifS"><input id="gifQ" type="text" placeholder="GIPHY\'de ara" autocomplete="off"></div><div class="gifG" id="gifG"></div><div class="gifF"><input id="gifU" type="text" placeholder="veya GIF linki yapıştır"><button type="button" data-gifa="url">Gönder</button><button type="button" class="k" data-gifa="key" title="GIPHY API anahtarı">⚙</button></div>';
+ p.innerHTML=strip('gif')+'<div class="gifS"><input id="gifQ" type="text" placeholder="GIF ara" autocomplete="off"></div><div class="gifG" id="gifG"></div><div class="gifF"><input id="gifU" type="text" placeholder="veya GIF linki yapıştır"><button type="button" data-gifa="url">Gönder</button><button type="button" class="k" data-gifa="key" title="GIPHY API anahtarı">⚙</button></div>';
  p.classList.add('open');b.classList.add('open');
  var q=document.getElementById('gifQ'),t;q.oninput=function(){clearTimeout(t);t=setTimeout(function(){gifLoad(q.value.trim())},350)};
  gifLoad('');if(innerWidth>1024)setTimeout(function(){q.focus()},50)}
-function gifLoad(q){var g=document.getElementById('gifG');if(!g)return;var id=++GQ;g.innerHTML='<div class="gifE">Yükleniyor…</div>';
- var Q=encodeURIComponent(q||'');
- var P=[
- function(){return fetch('https://api.giphy.com/v1/gifs/'+(q?'search':'trending')+'?api_key='+encodeURIComponent(GK())+'&limit=30&rating=pg-13'+(q?'&q='+Q:'')).then(function(r){return r.json()}).then(function(j){return (j.data||[]).map(function(x){var im=x.images||{};return [(im.fixed_width_small||im.fixed_width||im.downsized||{}).url,(im.downsized_medium||im.fixed_height||im.original||{}).url]})})},
- function(){return fetch('https://tenor.googleapis.com/v2/'+(q?'search?q='+Q+'&':'featured?')+'key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&limit=30&media_filter=tinygif,gif').then(function(r){return r.json()}).then(function(j){return (j.results||[]).map(function(x){var m=x.media_formats||{};return [(m.tinygif||{}).url,(m.gif||{}).url]})})},
- function(){return fetch('https://api.tenor.com/v1/'+(q?'search?q='+Q+'&':'trending?')+'key=LIVDSRZULELA&limit=30').then(function(r){return r.json()}).then(function(j){return (j.results||[]).map(function(x){var m=(x.media||[{}])[0];return [(m.tinygif||{}).url,(m.gif||{}).url]})})}];
- (function next(n){if(id!==GQ)return;if(n>=P.length){g.innerHTML='<div class="gifE">GIF servisleri yanıt vermiyor.<br>Ücretsiz bir GIPHY anahtarı al (developers.giphy.com) ve ekle; ya da aşağıya GIF linki yapıştır.<br><br><button type="button" data-gifa="key" style="display:inline-block;width:auto;padding:8px 14px;background:#fff;color:#111;font:600 13px system-ui">Anahtar ekle</button></div>';return}
-  P[n]().then(function(d){d=d.filter(function(p){return p[0]&&p[1]});if(!d.length)throw 0;if(id!==GQ)return;
-   g.innerHTML=d.map(function(p){return '<button type="button" data-gif="'+esc(p[1].split('?')[0])+'"><img loading="lazy" alt="" src="'+esc(p[0])+'"></button>'}).join('')})
-  .catch(function(){next(n+1)})})(0)}
+function kUrls(x){var f=x.file||x.files||{},L=[];(function w(o,p){if(!o)return;if(typeof o==='string'){if(/^https?:\/\/\S+\.(gif|webp)(\?|$)/i.test(o))L.push([p,o]);return}if(typeof o==='object')Object.keys(o).forEach(function(k){w(o[k],p+'/'+k)})})(f,'');
+ function pick(re,gifOnly){var c=L.filter(function(e){return re.test(e[0])&&(!gifOnly||/\.gif(\?|$)/i.test(e[1]))});return c.length?c[0][1]:null}
+ var big=pick(/md|hd/i,1)||pick(/./,1)||pick(/md|hd/i)||(L[0]&&L[0][1]),sm=pick(/xs|sm/i)||big;return [sm,big]}
+function gifLoad(q){var g=document.getElementById('gifG');if(!g)return;var id=++GQ,key=GK();
+ if(!key){g.innerHTML='<div class="gifE">GIF araması için bir kez ücretsiz KLIPY anahtarı gerekir (klipy.com/docs). Sahibi bir kere ekler, herkes kullanır.<br><br><button type="button" data-gifa="key" style="display:inline-block;width:auto;padding:8px 14px;background:#fff;color:#111;font:600 13px system-ui">Anahtar ekle</button><br><br>Ya da aşağıya GIF linki yapıştır.</div>';return}
+ g.innerHTML='<div class="gifE">Yükleniyor…</div>';
+ fetch('https://api.klipy.com/api/v1/'+encodeURIComponent(key)+'/gifs/'+(q?'search?q='+encodeURIComponent(q)+'&':'trending?')+'per_page=30&rating=pg-13').then(function(r){return r.json()}).then(function(j){if(id!==GQ)return;
+  var d=((j&&j.data&&j.data.data)||(j&&j.data)||[]);d=(Array.isArray(d)?d:[]).map(kUrls).filter(function(p){return p[0]&&p[1]});
+  g.innerHTML=d.length?d.map(function(p){return '<button type="button" data-gif="'+esc(p[1].split('?')[0])+'"><img loading="lazy" alt="" src="'+esc(p[0])+'"></button>'}).join(''):'<div class="gifE">Sonuç yok</div>'})
+ .catch(function(){if(id===GQ)g.innerHTML='<div class="gifE">GIF servisine ulaşılamadı. Anahtarı kontrol et ya da link yapıştır.</div>'})}
 function sendText(t){var inp=$('#chIn'),btn=$('#chSend');if(!inp||!btn||inp.disabled)return false;var old=inp.value;inp.value=t;inp.dispatchEvent(new Event('input',{bubbles:true}));btn.click();setTimeout(function(){if(!inp.value&&old){inp.value=old;inp.dispatchEvent(new Event('input',{bubbles:true}))}},0);return true}
 document.addEventListener('click',function(e){
  var t=e.target;if(!t.closest)return;
@@ -15433,7 +15434,7 @@ document.addEventListener('click',function(e){
  var g=t.closest('#gifPop [data-gif]');if(g){e.preventDefault();e.stopPropagation();if(sendText(g.dataset.gif))gifClose();return}
  var a=t.closest('#gifPop [data-gifa]');if(a){e.preventDefault();e.stopPropagation();
   if(a.dataset.gifa==='url'){var i=document.getElementById('gifU'),v=(i.value||'').trim();if(!/^https?:\/\/\S+$/i.test(v))return toast2('Geçerli bir link gir','err');if(sendText(v))gifClose()}
-  else{var k=prompt('GIPHY API anahtarın (developers.giphy.com). Boş bırakırsan varsayılan kullanılır:',localStorage.getItem('budd_giphy')||'');if(k!==null){try{if(k.trim())localStorage.setItem('budd_giphy',k.trim());else localStorage.removeItem('budd_giphy')}catch(x){}gifLoad('')}}
+  else{var k=prompt('GIPHY API anahtarın (developers.giphy.com). Boş bırakırsan varsayılan kullanılır:',localStorage.getItem('budd_klipy')||'');if(k!==null){try{if(k.trim())localStorage.setItem('budd_klipy',k.trim());else localStorage.removeItem('budd_klipy')}catch(x){}gifLoad('')}}
   return}
  if(isOpen('gifPop')&&!t.closest('#gifPop,[data-uc]'))gifClose()},true);
 /* mesajdaki GIF linklerini görsel olarak göster */
