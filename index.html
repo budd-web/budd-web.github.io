@@ -7045,8 +7045,8 @@ function cropUI(src,w,h,round,cb){const im=new Image();im.onerror=()=>toast('Gö
  V.onpointermove=e=>{if(!dr)return;ox=dr.ox+e.clientX-dr.x;oy=dr.oy+e.clientY-dr.y;draw()};
  V.onpointerup=V.onpointercancel=()=>{dr=null;V.style.cursor='grab'};
  o.querySelector('.cuC').onclick=()=>o.remove();
- o.querySelector('.cuA').onclick=()=>{const s=s0*z,c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.fillStyle='#111';x.fillRect(0,0,w,h);
-  x.drawImage(im,iw/2-ox/s-gw/(2*s),ih/2-oy/s-gh/(2*s),gw/s,gh/s,0,0,w,h);o.remove();cb(c.toDataURL('image/jpeg',.85))}}
+ o.querySelector('.cuA').onclick=()=>{const s=s0*z,c=document.createElement('canvas');const K=(!round&&w>=700)?Math.min(1200/w,Math.max(1,iw/(gw/s)/w)):1,W2=Math.round(w*K),H2=Math.round(h*K);c.width=W2;c.height=H2;const x=c.getContext('2d');x.imageSmoothingQuality='high';x.fillStyle='#111';x.fillRect(0,0,W2,H2);
+  x.drawImage(im,iw/2-ox/s-gw/(2*s),ih/2-oy/s-gh/(2*s),gw/s,gh/s,0,0,W2,H2);o.remove();let out=K>1?c.toDataURL('image/webp',.82):'';if(!/^data:image\/webp/.test(out))out=c.toDataURL('image/jpeg',.88);cb(out)}}
  im.src=src}
 /* görsel seçici: kırp/yakınlaştır arayüzü; opt.anim=animasyonu koru (cb(orijinal,sabit)) */
 function pickImg(w,h,cb,opt){opt=opt||{};const i=document.createElement('input');i.type='file';i.accept='image/*';
@@ -15431,9 +15431,9 @@ function gifLoad(q,more){var g=document.getElementById('gifG');if(!g)return;var 
  var id=more?GQ:++GQ;GLD=true;
  fetch('https://api.klipy.com/api/v1/'+encodeURIComponent(key)+'/gifs/'+(q?'search?q='+encodeURIComponent(q)+'&':'trending?')+'per_page=24&page='+GP+'&rating=pg-13').then(function(r){return r.json()}).then(function(j){GLD=false;if(id!==GQ)return;
   var dd=(j&&j.data)||{},d=(dd.data||(Array.isArray(dd)?dd:[]));d=d.map(kUrls).filter(function(p){return p[0]&&p[1]});GEND=!(dd&&dd.has_next)||!d.length;
-  if(!more)g.innerHTML='';
+  if(!more)g.innerHTML='<div class="gifCol"></div><div class="gifCol"></div>';
   if(!d.length&&!more){g.innerHTML='<div class="gifE">Sonuç yok</div>';return}
-  d.forEach(function(p){GN++;g.appendChild(gifCard(p));try{var im=new Image();im.src=p[1]}catch(e){}});})
+  d.forEach(function(p){GN++;var cs=g.querySelectorAll('.gifCol');(cs[0].offsetHeight<=cs[1].offsetHeight?cs[0]:cs[1]).appendChild(gifCard(p));try{var im=new Image();im.src=p[1]}catch(e){}});})
  .catch(function(){GLD=false;if(id===GQ&&!more)g.innerHTML='<div class="gifE">GIF servisine ulaşılamadı. Link yapıştırabilirsin.</div>'})}
 function sendText(t){var inp=$('#chIn'),btn=$('#chSend');if(!inp||!btn||inp.disabled)return false;var old=inp.value;inp.value=t;inp.dispatchEvent(new Event('input',{bubbles:true}));btn.click();setTimeout(function(){if(!inp.value&&old){inp.value=old;inp.dispatchEvent(new Event('input',{bubbles:true}))}},0);return true}
 document.addEventListener('click',function(e){
@@ -15592,9 +15592,10 @@ var mo=new MutationObserver(all);function hook(){var m=$('#msgs');if(m){mo.obser
 .schL div{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:#949ba4;align-items:center}
 .schL span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.schL button{all:unset;cursor:pointer;color:#f23f43;font-size:16px;padding:0 4px}
 
-.gifG{display:block!important;columns:2!important;column-gap:6px;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain}
-.gifG button{height:auto!important;margin:0 0 6px!important}.gifG img{height:auto!important}
-.gifE{column-span:all;width:auto}
+.gifG{display:flex!important;gap:6px;align-items:flex-start;columns:auto!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior:contain}
+.gifCol{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+.gifG button{margin:0!important;height:auto!important}.gifG img{height:auto!important}
+.gifE{flex:1;column-span:unset;width:auto}
 </style>
 <script id="ucSchJs">(function(){
 "use strict";
@@ -15688,6 +15689,7 @@ window.addEventListener('pointermove',function(e){
  apply();e.preventDefault()},true);
 function up(e){clearTimeout(tm);st=null;if(!ov)return;delete ptr[e.pointerId];if(!Object.keys(ptr).length)close();else g0={d:dist(),s:S.s,m:mid(),px:S.px,py:S.py}}
 window.addEventListener('pointerup',up,true);window.addEventListener('pointercancel',up,true);
+window.addEventListener('touchend',function(e){if(ov&&!(e.touches&&e.touches.length)){clearTimeout(tm);close()}},true);window.addEventListener('touchcancel',function(e){if(ov&&!(e.touches&&e.touches.length))close()},true);window.addEventListener('mouseup',function(){if(ov)close()},true);window.addEventListener('blur',function(){if(ov)close()});
 window.addEventListener('wheel',function(e){if(!ov)return;e.preventDefault();S.w.style.transition='transform .12s ease-out';S.s=Math.max(1,Math.min(5,S.s*Math.exp(-e.deltaY*.0022)));if(S.s<=1.02){S.px=S.py=0}apply()},{passive:false,capture:true});
 window.addEventListener('touchmove',function(e){if(ov)e.preventDefault()},{passive:false,capture:true});
 window.addEventListener('keydown',function(e){if(ov&&e.key==='Escape')close()},true);
