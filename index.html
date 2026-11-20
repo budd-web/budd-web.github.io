@@ -15193,6 +15193,7 @@ window.buddBotsSyncNow=run;
 .ucTabs button:hover{background:#ffffff1a}.ucTabs button.on{background:#5865f2;color:#fff;--ey:#5865f2}
 .ucTabs button{--ey:#2b2d31}
 html[data-mode="light"] .ucTabs button{--ey:#f2f3f5}
+html[data-mode="light"] .ucTabs button.on{--ey:#5865f2}
 #emjPop,#stkPop,#gifPop{animation:none!important;transition:none!important}
 #ucGhost{position:fixed;z-index:205;background:#2b2d31;border-radius:14px;pointer-events:none}
 html[data-mode="light"] #ucGhost{background:#f2f3f5}
@@ -15348,9 +15349,9 @@ html[data-mode="light"] .gifF input{background:#e3e5e8}
 .gfAct{background:#fff;color:#111;border-radius:8px;font-weight:600}.gfAct:disabled,.gfAct.dn{background:#2b2d31;color:#949ba4}
 .gfCard.th *{animation-play-state:running!important}
 
-.gfPv{font-size:16px;color:#dbdee1}.gfPv b{color:#fff}
-.gfMsg{width:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:2px 0;padding:8px 12px;border-left:3px solid #5865f2;background:#ffffff08;border-radius:4px;font-size:15px;color:#dbdee1}
-.gfMsg b{color:#fff;font-weight:600}.gfOk{font-size:13px;color:#949ba4}
+.gfPv{font-size:16px}.gfPv b{font-weight:700}
+.gfMsg{width:auto;display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:2px 0;padding:8px 12px;border-left:3px solid #5865f2;background:#8882;border-radius:4px;font-size:15px;color:inherit}
+.gfMsg b{color:inherit;font-weight:700}.gfOk{font-size:13px;opacity:.6}
 .gfAct{margin:0;padding:5px 14px;font-size:13px}
 </style>
 <script id="ucGfJs">(function(){
@@ -15557,7 +15558,11 @@ var mo=new MutationObserver(all);function hook(){var m=$('#msgs');if(m){mo.obser
 })();</script>
 
 <style id="ucSchCss">
-.dcRi [data-sch] svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.dcPlus{position:relative!important;overflow:hidden}
+.dcPlus>svg{transition:transform .5s cubic-bezier(.34,1.3,.5,1),opacity .35s ease}
+.dcPlus>svg.ucClk{position:absolute;left:50%;top:50%;margin:-12px 0 0 -12px;transform:scale(.2) rotate(-120deg);opacity:0;pointer-events:none}
+.dcPlus.ucS>svg:not(.ucClk){transform:scale(.2) rotate(120deg);opacity:0}
+.dcPlus.ucS>svg.ucClk{transform:none;opacity:1}
 #schOv{position:fixed;inset:0;z-index:100001;background:#0009;display:none;align-items:center;justify-content:center;padding:12px;font-family:system-ui,sans-serif}
 #schOv.open{display:flex}
 .schM{width:min(380px,100%);max-height:90vh;overflow:auto;background:#1e1f22;color:#dbdee1;border:1px solid #ffffff14;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:12px}
@@ -15595,10 +15600,12 @@ function openSch(){var inp=$('#chIn'),txt=inp?inp.value.trim():'',a=J('budd_sche
  if(!txt){pick('Planlanan mesajlar','Yeni planlamak için önce mesajı yaz.',function(){},list);return}
  pick('Mesajı zamanla',txt,function(t){var b=J('budd_sched',[]);b.push({t:t,k:chan(),m:txt});W('budd_sched',b);inp.value='';inp.dispatchEvent(new Event('input',{bubbles:true}));ov().classList.remove('open');T('Mesaj planlandı: '+fmt(t),'ok')},list)}
 window.buddRemind=function(txt){pick('Bana hatırlat',txt.slice(0,120),function(t){var b=J('budd_rem',[]);b.push({t:t,k:chan(),m:txt.slice(0,200)});W('budd_rem',b);ov().classList.remove('open');T('Hatırlatma kuruldu: '+fmt(t),'ok');try{if('Notification' in window&&Notification.permission==='default')Notification.requestPermission()}catch(e){}})};
-document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('[data-sch]');if(b){e.preventDefault();e.stopPropagation();openSch()}},true);
-function ensure(){var ri=$('.dcRi');if(!ri||ri.querySelector('[data-sch]'))return;var b=document.createElement('button');b.type='button';b.setAttribute('data-sch','1');b.setAttribute('aria-label','Zamanla');b.title='Mesajı zamanla';
- b.innerHTML='<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.500"/><path d="M12 7.500V12l3 2"/></svg>';var g=ri.querySelector('[data-gift]');ri.insertBefore(b,g?g.nextSibling:ri.firstChild)}
-setInterval(ensure,1000);ensure();
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('.dcPlus.ucS');if(b){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();openSch()}},true);
+var CLK='<svg class="ucClk" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm-1 4.500h2v5.100l3.200 1.900-1 1.700-4.200-2.500z"/></svg>';
+function morph(){var p=$('.dcPlus[data-fl]'),i=$('#chIn');if(!p||!i)return;var old=$('.dcRi [data-sch]');if(old)old.remove();
+ if(!p.querySelector('.ucClk'))p.insertAdjacentHTML('beforeend',CLK);
+ var on=!!i.value.trim();if(p.classList.contains('ucS')!==on){p.classList.toggle('ucS',on);p.setAttribute('aria-label',on?'Mesajı zamanla':'Ekle')}}
+setInterval(morph,150);
 function send(txt){var inp=$('#chIn'),btn=$('#chSend');if(!inp||!btn||inp.disabled)return false;var old=inp.value;inp.value=txt;inp.dispatchEvent(new Event('input',{bubbles:true}));btn.click();setTimeout(function(){if(!inp.value&&old){inp.value=old;inp.dispatchEvent(new Event('input',{bubbles:true}))}},0);return true}
 function tick(){var n=Date.now(),a=J('budd_sched',[]),k=chan(),ch=false;
  a=a.filter(function(x){if(x.t<=n&&x.k===k&&send(x.m)){ch=true;T('Planlanan mesaj gönderildi','ok');return false}return true});if(ch)W('budd_sched',a);
