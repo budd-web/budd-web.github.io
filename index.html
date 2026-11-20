@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="tr">
-<head><script id="fixShim">(function(w){
+<head><style id="ucNoFlash">html.ucWait body{visibility:hidden!important}html.ucWait{background:#1c1c1f}html.ucWait[data-mode="light"]{background:#f0f0f2}</style><script>(function(){var d=document.documentElement;try{var m=localStorage.getItem('budd_mode');d.setAttribute('data-mode',m==='light'||(m==='system'&&window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark');var t=localStorage.getItem('budd_theme_id');if(t&&t!=='default')d.setAttribute('data-theme',t)}catch(e){}d.classList.add('ucWait');function go(){d.classList.remove('ucWait')}document.addEventListener('DOMContentLoaded',go);setTimeout(go,2500)})()</script><script id="fixShim">(function(w){
 w.SET='<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.5 7.5 0 0 0 0-2l2-1.5-2-3.5-2.4 1a7 7 0 0 0-1.7-1L15 3.5h-4l-.3 2.5a7 7 0 0 0-1.7 1l-2.4-1-2 3.5 2 1.5a7.5 7.5 0 0 0 0 2l-2 1.5 2 3.5 2.4-1a7 7 0 0 0 1.7 1l.3 2.5h4l.3-2.5a7 7 0 0 0 1.7-1l2.4 1 2-3.5zM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7z"/></svg>';
 /* profil müziği modülü dosyada yoktu: profil sayfası/kaydı bu yüzden hata veriyordu */
 w.muOk=function(m){if(!m||typeof m!=='object'||!m.t)return null;var o={t:String(m.t).slice(0,80),by:String(m.by||'').slice(0,60)};if(typeof m.u==='string'&&/^https?:\/\//.test(m.u))o.u=m.u.slice(0,500);if(m.id)o.id=String(m.id).slice(0,40);return o};
@@ -15372,7 +15372,12 @@ var NM={emj:'Emoji',stk:'Çıkartma',gif:'GIF'};
 function strip(a){return '<div class="ucTabs">'+['emj','stk','gif'].map(function(k){return '<button type="button" data-uc="'+k+'" class="'+(k===a?'on pl':'')+'">'+IC[k]+NM[k]+'</button>'}).join('')+'</div>'}
 function ensure(){[['emjPop','emj'],['stkPop','stk'],['gifPop','gif']].forEach(function(x){var p=document.getElementById(x[0]);
  if(p&&p.classList.contains('open')&&!p.querySelector(':scope>.ucTabs'))p.insertAdjacentHTML('afterbegin',strip(x[1]))})}
-var rq=0;new MutationObserver(function(){if(rq)return;rq=requestAnimationFrame(function(){rq=0;ensure()})}).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
+var OPN={};function one(){var ids=['emjPop','stkPop','gifPop'],now=ids.filter(isOpen);
+ if(now.length>1){var nw=now.filter(function(i){return !OPN[i]});var keep=nw.length?nw[nw.length-1]:now[now.length-1];
+  now.forEach(function(i){if(i===keep)return;if(i==='gifPop')gifClose();else{var b=$(i==='emjPop'?'.dcRi [data-emj]':'.dcRi [data-stk]');var p=document.getElementById(i);if(b){b.click();if(isOpen(i)&&p)p.classList.remove('open')}}})
+  now=ids.filter(isOpen)}
+ OPN={};now.forEach(function(i){OPN[i]=1})}
+var rq=0;new MutationObserver(function(){if(rq)return;rq=requestAnimationFrame(function(){rq=0;ensure();one()})}).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});
 setInterval(ensure,250);
 var SW={rect:null};
 function sw(to){
