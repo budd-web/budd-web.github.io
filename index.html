@@ -15405,7 +15405,7 @@ document.addEventListener('click',function(e){var b=e.target.closest&&e.target.c
 
 /* ===== 2) GIF (dosya değil, kaynak linki gider) ===== */
 var GQ=0;
-var KLIPY_KEY='';/* sahibi: klipy.com/docs'tan alınan ücretsiz anahtarı buraya yaz */
+var KLIPY_KEY='4KjMTnmXN8iRmY5EXjRn2hFLKH8YzMpPt933eCoafIseEV6gOoiD2eiguDCZna6d';/* sahibi: klipy.com/docs'tan alınan ücretsiz anahtarı buraya yaz */
 function GK(){try{return KLIPY_KEY||localStorage.getItem('budd_klipy')||''}catch(e){return KLIPY_KEY}}
 function gifEl(){var p=document.getElementById('gifPop');if(!p){p=document.createElement('div');p.id='gifPop';document.body.appendChild(p);var b=document.createElement('div');b.id='gifBk';b.onclick=gifClose;document.body.appendChild(b)}return p}
 function gifClose(){var p=document.getElementById('gifPop'),b=document.getElementById('gifBk');if(p)p.classList.remove('open');if(b)b.classList.remove('open')}
