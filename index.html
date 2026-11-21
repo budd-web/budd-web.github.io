@@ -13031,7 +13031,7 @@ body.v80drag{-webkit-user-select:none;user-select:none;cursor:grabbing}
 .screen.active{animation:v24f .12s ease-out both!important}
 #frMain,#mktMain,#chatMain,#vstage{animation:v24r .14s ease-out both!important}
 #side{animation-duration:.12s!important}#rail{animation-duration:.1s!important}
-.screen:not(.active){content-visibility:hidden}
+.screen:not(.active):not(.emb){content-visibility:hidden}
 #msgs>*,#chatMsgs>*,.msg{content-visibility:auto;contain-intrinsic-size:auto 56px}#msgs>*:hover,#msgs>*:focus-within,#chatMsgs>*:hover,.msg:hover{content-visibility:visible}
 #ssPage,#sPage,#sList{contain:layout style;overscroll-behavior:contain}
 @media (prefers-reduced-motion:reduce){.screen.active,#frMain,#mktMain,#chatMain,#vstage{animation:none!important}}
