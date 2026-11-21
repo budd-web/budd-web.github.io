@@ -6213,7 +6213,7 @@ setInterval(()=>{if(!st.on)return;const n=performance.now();let sp=VOICE.on&&VOI
  const tg=sp?.3:1;if(Math.abs(duck-tg)>.01){duck+=(tg-duck)*(tg<duck?.5:.12);setEl()}},120);
 
 /* ---- arayüz ---- */
-function openScreen(){show('mov');texts();people();ui()}
+function openScreen(){const m=document.getElementById('mov');if(window.vc&&m&&m.classList.contains('emb')){texts();people();ui();try{window.__vc&&__vc.stageR&&__vc.stageR(true)}catch(e){}return}show('mov');texts();people();ui()}
 function isHostMe(){return !NET.on||NET.host}
 function texts(){
  g('mvLogo').textContent=L('FİLM ODASI','MOVIE ROOM');
@@ -15695,6 +15695,21 @@ html[data-mode="light"] #pfCard .pcSec{background:#00000008}
 .lbLv.has{border-style:solid}.lbLv.has span{display:none}
 .lbPo,.pkPi{position:relative}
 .lbLg{position:absolute;left:8%;right:8%;bottom:7%;width:84%;max-height:34%;object-fit:contain;object-position:center bottom;pointer-events:none}
+
+/* film seçimi + film sayfası: sesli sohbet alanının içinde */
+#mvPick.inV{position:absolute!important;inset:0!important;z-index:40;padding:0!important;background:#111214!important;align-items:stretch!important;justify-content:stretch!important;border-radius:inherit}
+#mvPick.inV:not(.show){display:none!important}
+#mvPick.inV .pk{width:100%!important;max-width:none!important;height:100%!important;max-height:none!important;border-radius:0!important;box-shadow:none!important;background:transparent!important;padding:0 clamp(12px,3vw,32px) 12px}
+#mvPick.inV .pkH{padding:18px 0 8px}#mvPick.inV .pkH b{font-size:22px}
+#mvPick.inV #pkQ{margin:4px 0 12px!important;border-radius:12px!important}
+#mvPick.inV .pkL{flex:1;min-height:0;overflow:auto}
+#mvPick.inV .pkG{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(130px,1fr))!important;gap:14px!important;padding:4px 0 14px!important}
+#mvPick.inV .pkPo{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:8px;min-width:0;transition:transform .2s cubic-bezier(.2,.8,.2,1)}
+#mvPick.inV .pkPo:hover{transform:translateY(-3px)}
+#mvPick.inV .pkPt{font:700 13px 'Plus Jakarta Sans',system-ui,sans-serif;line-height:1.25;color:#f2f3f5;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+#mvPick.inV .pkF{padding:8px 0 0}
+#lbDet.inV{position:absolute!important;inset:0!important;z-index:41;border-radius:inherit}
+#lbDet.inV .dX{position:absolute}
 </style>
 
 <script id="ucPcJs">(function(){
@@ -15716,7 +15731,9 @@ var $=function(s){return document.querySelector(s)};
 function esc(x){return String(x==null?'':x).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 function cssU(u){return String(u).replace(/['"()\\\s]/g,function(c){return encodeURIComponent(c)})}
 window.lbHas=function(m){return !!(m&&(m.b||m.l||m.o||m.d||m.g||m.r||m.mi||m.mr||m.mm||m.mt||m.la||m.n))};
-window.lbDetail=function(m,go){var o=document.getElementById('lbDet');if(!o){o=document.createElement('div');o.id='lbDet';document.body.appendChild(o)}
+function vhost(){var v=document.getElementById('vstage');return v&&v.offsetWidth>0&&v.offsetHeight>0?v:null}
+function place(o){var v=vhost();if(v){if(o.parentNode!==v)v.appendChild(o);o.classList.add('inV')}else{if(o.parentNode!==document.body)document.body.appendChild(o);o.classList.remove('inV')}}
+window.lbDetail=function(m,go){var o=document.getElementById('lbDet');if(!o){o=document.createElement('div');o.id='lbDet';document.body.appendChild(o)}place(o);
  var meta=[];if(m.d)meta.push(esc(m.d));if(m.r)meta.push('<b>'+esc(m.r)+'</b>');if(m.g)meta.push(esc(m.g));
  var sc=[];if(m.mm)sc.push('<span><em>MC</em>'+esc(m.mm)+'</span>');if(m.mr)sc.push('<span><em>RT</em>'+esc(m.mr)+'</span>');if(m.mi)sc.push('<span><em>IMDb</em>'+esc(m.mi)+'</span>');if(m.mt)sc.push('<span><em>TMDB</em>'+esc(m.mt)+'</span>');if(m.la)sc.push('<span><em>Son yayın</em>'+esc(m.la)+'</span>');
  var bg=m.b||m.p||'';
@@ -15727,6 +15744,7 @@ window.lbDetail=function(m,go){var o=document.getElementById('lbDet');if(!o){o=d
  o.querySelector('.dX').onclick=cl;o.querySelector('.dGo').onclick=function(){cl();go()};
  o.onkeydown=null};
 document.addEventListener('keydown',function(e){if(e.key==='Escape'){var o=document.getElementById('lbDet');if(o&&o.classList.contains('on')){o.classList.remove('on');e.stopPropagation()}}},true);
+new MutationObserver(function(){var p=document.getElementById('mvPick');if(p&&p.classList.contains('show'))place(p)}).observe(document.body,{attributes:true,subtree:true,attributeFilter:['class']});
 /* TMDB ile otomatik doldur */
 function key(){var k=TMDB_KEY;try{k=k||localStorage.getItem('budd_tmdb')||''}catch(e){}return k}
 function img(p,w){return p?'https://image.tmdb.org/t/p/'+w+p:''}
