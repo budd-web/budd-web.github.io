@@ -5961,7 +5961,7 @@ document.body.insertAdjacentHTML('beforeend',`
 <section id="mov" class="screen">
  <header class="top">
   <div class="logo"><span class="grad" id="mvLogo"></span></div>
-  <div class="row"><button class="btn" id="mvCode"></button><button class="icon" data-open-settings></button><button class="btn danger" id="mvLeave"></button></div>
+  <div class="row"><div class="mvPpl" id="mvPpl"></div><button class="btn" id="mvCode"></button><button class="icon" data-open-settings></button><button class="btn danger" id="mvLeave"></button></div>
  </header>
  <div class="svWrap">
   <div class="svPlayer" id="mvPlayer">
@@ -6288,7 +6288,9 @@ g('mvReact').onclick=ev=>{const b=ev.target.closest('[data-e]');if(!b)return;flo
 /* ---- v60: host hapı + menü, kalp, YouTube kalkanı ---- */
 const menuOn=()=>g('mvMenu').classList.contains('on');
 let hsig='';
-function hostPill(){
+function mvPpl(){const el=g('mvPpl');if(!el)return;const l=Object.values(S.players||{}),sig=l.map(p=>p.id).join(',');if(el.dataset.s===sig)return;el.dataset.s=sig;const sh=l.length>4?l.slice(0,4):l,rest=l.length-4;
+ el.innerHTML=sh.map(p=>'<span class="svHA mvPa" title="'+String(p.name||'').replace(/[<>&"]/g,'')+'">'+avCanvas(p.id)+'</span>').join('')+(rest>0?'<span class="svHA mvPa mvPn">+'+Math.min(99,rest)+'</span>':'');setTimeout(avRepaintAll,0)}
+function hostPill(){try{mvPpl()}catch(e){}
  const h=Object.values(S.players||{}).find(p=>isHost(p)),me=isHostMe(),nm=h?h.name:(ST.name||'');
  g('mvHostT').textContent=me?L('Sen yönetiyorsun','You are hosting'):nm+L(' yönetiyor',' is hosting');
  const sig=(h?h.id+'|'+h.name:'')+me+ST.lang;
@@ -6371,7 +6373,7 @@ function pkRender(){
  if(lib.length){const gr=document.createElement('div');gr.className='pkG';lib.forEach(m=>{const b=document.createElement('button');b.type='button';b.className='pkPo';
    const p=document.createElement('span');p.className='pkPi';p.style.setProperty('--h',[...m.t].reduce((h,c)=>(h*31+c.charCodeAt(0))%360,0));if(m.p)p.style.backgroundImage='url("'+m.p.replace(/["\\\s]/g,c=>encodeURIComponent(c))+'")';else p.textContent=(m.t[0]||'?').toUpperCase();
    const t=document.createElement('span');t.className='pkPt';t.textContent=m.t;b.append(p,t);if(m.a){const a=document.createElement('em');a.textContent='SES';p.append(a)}
-   b.onclick=()=>{g('mvPick').classList.remove('show');pick({t:m.t,y:'',v:m.v,a:m.a||''})};gr.append(b)});box.append(gr);
+   b.onclick=()=>{const go=()=>{g('mvPick').classList.remove('show');pick({t:m.t,y:'',v:m.v,a:m.a||''})};if(window.lbDetail&&window.lbHas(m))lbDetail(m,go);else go()};gr.append(b)});box.append(gr);
    if(arr.length){const h=document.createElement('div');h.className='pkS';h.textContent=L('Genel liste','General list');box.append(h)}}
  arr.forEach(m=>add(m,pick));
  if(mk.length){const h=document.createElement('div');h.className='pkS';h.textContent=L('Keşfet: filmler ve diziler','Discover: movies & series');box.append(h);mk.forEach(m=>add(m,x=>window.mkPlay&&mkPlay(x.id,x.i)))}
@@ -7134,7 +7136,7 @@ window.srvAssetsIn=(sid,a)=>{const s=gs(String(sid));if(!s||s.ro||!a||typeof a!=
  if(a.ij==='req'||a.ij==='open'){const v=a.ij==='req'?'req':'';if((s.ij||'')!==v){if(v)s.ij=v;else delete s.ij;ch=1}}
  if(Array.isArray(a.ja)){const ja=a.ja.slice(-300).map(x=>String(x).slice(0,60));if(JSON.stringify(ja)!==JSON.stringify(s.ja||[])){s.ja=ja;ch=1}}
  if(Array.isArray(a.ev)){const ev=a.ev.slice(-50).filter(x=>x&&typeof x.n==='string'&&+x.t>0).map(x=>({id:String(x.id||'').slice(0,20),n:x.n.slice(0,60),t:+x.t,ds:String(x.ds||'').slice(0,1000),lc:x.lc&&(x.lc.k==='v'||x.lc.k==='o')?{k:x.lc.k,v:String(x.lc.v||'').slice(0,80)}:undefined,by:String(x.by||'').slice(0,24)}));if(JSON.stringify(ev)!==JSON.stringify(s.ev||[])){s.ev=ev;ch=1}}
- if(Array.isArray(a.lib)){const u=x=>typeof x==='string'&&/^https?:\/\/\S{3,600}$/i.test(x),lb=a.lib.slice(0,100).filter(x=>x&&typeof x.t==='string'&&u(x.v)).map(x=>({id:String(x.id||'').slice(0,20),t:x.t.slice(0,80),p:u(x.p)?x.p:'',v:x.v,a:u(x.a)?x.a:''}));if(JSON.stringify(lb)!==JSON.stringify(s.lib||[])){s.lib=lb;ch=1}}
+ if(Array.isArray(a.lib)){const u=x=>typeof x==='string'&&/^https?:\/\/\S{3,600}$/i.test(x),lb=a.lib.slice(0,100).filter(x=>x&&typeof x.t==='string'&&u(x.v)).map(x=>({id:String(x.id||'').slice(0,20),t:x.t.slice(0,80),p:u(x.p)?x.p:'',v:x.v,a:u(x.a)?x.a:'',l:u(x.l)?x.l:'',b:u(x.b)?x.b:'',n:u(x.n)?x.n:'',d:String(x.d||'').slice(0,20),r:String(x.r||'').slice(0,12),g:String(x.g||'').slice(0,60),o:String(x.o||'').slice(0,600),mi:String(x.mi||'').slice(0,8),mr:String(x.mr||'').slice(0,8),mm:String(x.mm||'').slice(0,8),mt:String(x.mt||'').slice(0,8),la:String(x.la||'').slice(0,20)}));if(JSON.stringify(lb)!==JSON.stringify(s.lib||[])){s.lib=lb;ch=1}}
  if(ch){save();try{railR();sideR();if(isT(cur))draw()}catch(e){}}};
 const SG={};
 window.srvPubAll=force=>{const D=window.buddDb;if(!D)return;
@@ -7388,16 +7390,27 @@ SSP.lib=function(s,own){const{H}=sx,L=s.lib||[];
   <label class="ssL">Afiş linki <i>(film logosu / poster)</i></label><input type="text" id="lbP" placeholder="https://…/poster.jpg" autocomplete="off">
   <label class="ssL">Video linki</label><input type="text" id="lbV" placeholder="https://…/film.mp4 · .m3u8 · YouTube" autocomplete="off">
   <label class="ssL">Ses linki <i>(varsa)</i></label><input type="text" id="lbA" placeholder="https://…/ses.m3u8" autocomplete="off">
+  <details class="lbDt"><summary>Film sayfası detayları</summary>
+  <button class="btn sm" id="lbAuto" type="button" style="margin:8px 0">Otomatik doldur (TMDB)</button>
+  <label class="ssL">Film logosu <i>(şeffaf PNG linki)</i></label><input type="text" id="lbL" placeholder="https://…/logo.png" autocomplete="off">
+  <label class="ssL">Arka plan görseli</label><input type="text" id="lbB" placeholder="https://…/backdrop.jpg" autocomplete="off">
+  <label class="ssL">Çıkış tarihi</label><input type="text" id="lbD" maxlength="20" placeholder="15/01/2023" autocomplete="off">
+  <label class="ssL">Yaş sınırı</label><input type="text" id="lbR" maxlength="12" placeholder="TV-MA / 16+" autocomplete="off">
+  <label class="ssL">Tür</label><input type="text" id="lbG" maxlength="60" placeholder="Drama" autocomplete="off">
+  <label class="ssL">Özet</label><textarea id="lbO" maxlength="600" rows="4" class="lbTa"></textarea>
+  <label class="ssL">Puanlar <i>(IMDb · Rotten Tomatoes · Metacritic · TMDB)</i></label><div class="lbSc"><input type="text" id="lbS1" maxlength="8" placeholder="8.7"><input type="text" id="lbS2" maxlength="8" placeholder="96%"><input type="text" id="lbS3" maxlength="8" placeholder="84%"><input type="text" id="lbS4" maxlength="8" placeholder="8.1"></div>
+  <label class="ssL">Son yayın tarihi <i>(diziler)</i></label><input type="text" id="lbLa" maxlength="20" placeholder="12/03/2023" autocomplete="off">
+  <label class="ssL">Yayıncı logosu <i>(HBO vb.)</i></label><input type="text" id="lbN" placeholder="https://…/hbo.png" autocomplete="off"></details>
   <div class="pfRow" style="margin-top:14px"><button class="btn sm primary" id="lbAdd" type="button">Kütüphaneye ekle</button></div></div></div>`
   :'<p class="ssNote">Kütüphaneyi sadece sunucu sahibi ('+E(s.o||'')+') düzenleyebilir.</p>';
  const grid=L.length?`<div class="lbG">${L.map(m=>`<div class="lbC"><div class="lbPo" style="--h:${lbHue(m.t)};${m.p?`background-image:url('${lbCss(m.p)}')`:''}">${m.p?'':`<b>${E((m.t[0]||'?').toUpperCase())}</b>`}${m.a?'<em>SES</em>':''}${own?`<button class="lbX" type="button" data-lbdel="${E(m.id)}" title="Sil">${LBX}</button>`:''}</div><span>${E(m.t)}</span></div>`).join('')}</div>`:'<div class="lbEm"><b>Kütüphane boş</b><small>Eklediğin filmler, film odasında "Film seç" dediğinde afişleriyle burada görünür.</small></div>';
  return H('Film Kütüphanesi','Bu sunucunun kendi afişli film listesi. Her şey link ile eklenir; sunucudaki herkes aynı kütüphaneyi görür. ('+L.length+'/100)')+form+'<label class="ssL" style="margin-top:22px">Filmler</label>'+grid};
 document.addEventListener('input',e=>{if(e.target.id!=='lbP')return;const p=$('#lbPv'),u=e.target.value.trim();if(!p)return;if(lbU(u)){p.style.backgroundImage="url('"+u.replace(/['"()\\\s]/g,c=>encodeURIComponent(c))+"')";p.classList.add('has')}else{p.style.backgroundImage='';p.classList.remove('has')}});
 document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('#ssPage button');if(!t)return;const s=gs(curSrv);if(!s||!ssOwn(s))return;
- if(t.id==='lbAdd'){const g=i=>($('#'+i).value||'').trim(),n=g('lbT'),p=g('lbP'),v=g('lbV'),a=g('lbA');
+ if(t.id==='lbAdd'){const g=i=>(($('#'+i)||{}).value||'').trim(),n=g('lbT'),p=g('lbP'),v=g('lbV'),a=g('lbA'),X={l:g('lbL'),b:g('lbB'),n:g('lbN')};for(const k in X)if(X[k]&&!lbU(X[k]))return toast('Görsel linki geçersiz','err');
   if(!n)return toast('Film adını yaz','err');if(!lbU(v))return toast('Geçerli bir video linki gir','err');if(p&&!lbU(p))return toast('Afiş linki geçersiz','err');if(a&&!lbU(a))return toast('Ses linki geçersiz','err');
   s.lib=s.lib||[];if(s.lib.length>=100)return toast('En fazla 100 film');
-  s.lib.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),t:n.slice(0,80),p:p.slice(0,600),v:v.slice(0,600),a:a.slice(0,600)});save();try{srvPubAll(true)}catch(x){}toast('Kütüphaneye eklendi','ok');ssPage('lib')}
+  s.lib.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,5),t:n.slice(0,80),p:p.slice(0,600),v:v.slice(0,600),a:a.slice(0,600),l:X.l.slice(0,600),b:X.b.slice(0,600),n:X.n.slice(0,600),d:g('lbD').slice(0,20),r:g('lbR').slice(0,12),g:g('lbG').slice(0,60),o:g('lbO').slice(0,600),mi:g('lbS1').slice(0,8),mr:g('lbS2').slice(0,8),mm:g('lbS3').slice(0,8),mt:g('lbS4').slice(0,8),la:g('lbLa').slice(0,20)});save();try{srvPubAll(true)}catch(x){}toast('Kütüphaneye eklendi','ok');ssPage('lib')}
  else if(t.dataset.lbdel){const i=(s.lib||[]).findIndex(x=>x.id===t.dataset.lbdel);if(i>=0&&confirm('"'+s.lib[i].t+'" kütüphaneden silinsin mi?')){s.lib.splice(i,1);save();try{srvPubAll(true)}catch(x){}ssPage('lib')}}},true);
 window.srvLib=()=>{const s=gs(curSrv);return s&&Array.isArray(s.lib)?s.lib:[]};
 
@@ -15619,10 +15632,9 @@ setInterval(tick,8000);
 
 
 <style id="ucTagCss">
-.v90tag{display:inline-flex!important;align-items:center!important;gap:5px!important;margin:0 0 0 6px!important;padding:1px 8px 1px 3px!important;border-radius:7px!important;background:#ffffff1f!important;box-shadow:inset 0 0 0 1px #ffffff14!important;color:#f2f3f5!important;border:0!important;filter:none!important;font:700 11px/1.5 'Plus Jakarta Sans',system-ui,sans-serif!important;letter-spacing:.3px!important;text-transform:uppercase;white-space:nowrap;vertical-align:middle;width:auto!important}
+.v90tag{display:inline-flex!important;align-items:center!important;gap:5px!important;margin:0 0 0 6px!important;padding:1px 8px 1px 3px!important;border-radius:7px!important;background:#ffffff1f!important;box-shadow:inset 0 0 0 1px #ffffff14!important;color:#f2f3f5!important;border:0!important;filter:none!important;font:700 10px/1.5 'Plus Jakarta Sans',system-ui,sans-serif!important;letter-spacing:.3px!important;text-transform:uppercase;white-space:nowrap;vertical-align:middle;width:auto!important}
 html[data-mode="light"] .v90tag{background:#0000001a!important;box-shadow:inset 0 0 0 1px #0000000f!important;color:#2e3338!important}
-.v90tag svg{width:22px!important;height:22px!important;margin:-4px 0!important;flex:none;image-rendering:pixelated;shape-rendering:crispEdges;filter:none!important}
-.v93r .v90tag svg,.v38mr .v90tag svg{width:11px!important;height:11px!important;margin:0!important}
+.v90tag svg{width:1.4em!important;height:1.4em!important;margin:-.3em 0!important;flex:none;image-rendering:pixelated;shape-rendering:crispEdges;filter:none!important}
 .v90pv .v90tag{margin:0!important;font-size:13px!important}
 .v90ic{grid-template-columns:repeat(auto-fill,minmax(44px,1fr))!important}.v90ic button svg{width:22px!important;height:22px!important;margin:0!important;filter:none!important}
 /* profil kartı düzeni */
@@ -15633,7 +15645,7 @@ html[data-mode="light"] .v90tag{background:#0000001a!important;box-shadow:inset 
 #pfCard .pcNr .pcN{display:block;margin:0;min-width:0;overflow-wrap:anywhere;font-size:22px!important}
 #pfCard .pcNr .v90tag{margin:0!important;padding:2px 10px 2px 4px!important;font-size:12px!important;border-radius:8px!important}
 #pfCard .pcNr .v90tag{padding:2px 9px 2px 5px!important;gap:5px!important}
-#pfCard .pcNr .v90tag svg{width:16.5px!important;height:16.5px!important;margin:-3px 0!important}
+
 #pfCard .pcR{padding:4px 10px!important;border-radius:8px!important;gap:6px!important;font:600 12.5px 'Plus Jakarta Sans',system-ui,sans-serif!important;background:#ffffff0f!important;box-shadow:none!important}
 html[data-mode="light"] #pfCard .pcR{background:#0000000a!important}
 #pfCard .pcR i{width:8px!important;height:8px!important}
@@ -15650,6 +15662,33 @@ html[data-mode="light"] #pfCard .pcSec{background:#00000008}
 #pfCard .pcSec>*:last-child{margin-bottom:0}
 #pfCard .pcAct{top:126px!important;right:14px;gap:8px}
 #pfCard .pcBd>.btn{display:flex;width:100%;margin-top:14px;justify-content:center}
+
+.mvPpl{display:flex;align-items:center;margin-right:14px}
+.mvPpl .mvPa{width:30px!important;height:30px!important;margin-left:-8px;box-shadow:0 0 0 2px #0e0e10;position:relative}
+.mvPpl .mvPa:first-child{margin-left:0}
+.mvPpl .mvPa .avw,.mvPpl .mvPa canvas{width:30px!important;height:30px!important}
+.mvPn{display:grid!important;place-items:center;background:#3a3d44!important;color:#fff;font:700 11px 'Plus Jakarta Sans',system-ui,sans-serif}
+.lbDt{margin-top:10px}.lbDt summary{cursor:pointer;font-weight:700;font-size:13px;padding:6px 0}
+.lbTa{box-sizing:border-box;width:100%;background:#16171a;color:inherit;border:1px solid #ffffff14;border-radius:8px;padding:9px 10px;font:500 14px system-ui;resize:vertical}
+.lbSc{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.lbSc input{min-width:0}
+#lbDet{position:fixed;inset:0;z-index:2147483000;background:#000;color:#fff;display:none;overflow:auto;font-family:'Plus Jakarta Sans',system-ui,sans-serif}
+#lbDet.on{display:block}
+#lbDet .dBg{position:absolute;inset:0;background:#000 center/cover no-repeat;opacity:.9}
+#lbDet .dBg::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#000d 0%,#0006 45%,#0000 70%),linear-gradient(0deg,#000 0%,#000a 28%,#0000 60%)}
+#lbDet .dIn{position:relative;min-height:100%;box-sizing:border-box;padding:70px clamp(20px,5vw,80px) 40px;display:flex;flex-direction:column;justify-content:flex-end;gap:12px;max-width:900px}
+#lbDet .dX{position:fixed;left:18px;top:18px;width:44px;height:44px;border-radius:50%;border:0;background:#0009;color:#fff;cursor:pointer;display:grid;place-items:center;z-index:2}
+#lbDet .dX svg{width:22px;height:22px}
+#lbDet .dLogo{max-width:min(520px,80vw);max-height:150px;object-fit:contain;object-position:left bottom;align-self:flex-start}
+#lbDet h1{margin:0;font-size:clamp(34px,7vw,64px);line-height:1;font-weight:800;letter-spacing:-.02em}
+#lbDet .dMeta{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:15px;color:#dcdde0}
+#lbDet .dMeta i{width:4px;height:4px;border-radius:50%;background:#dcdde0;display:inline-block}
+#lbDet .dMeta b{font:800 11px sans-serif;background:#ffffff26;border-radius:5px;padding:3px 6px}
+#lbDet .dO{margin:0;font-size:16px;line-height:1.55;color:#e8e9ec;max-width:640px}
+#lbDet .dSc{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:15px;font-weight:600;color:#e8e9ec}
+#lbDet .dSc span em{font-style:normal;font:800 11px sans-serif;background:#ffffff26;border-radius:5px;padding:3px 6px;margin-right:6px}
+#lbDet .dAct{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:6px}
+#lbDet .dGo{all:unset;cursor:pointer;background:#fff;color:#111;border-radius:999px;padding:12px 30px;font-weight:800;font-size:16px}
+#lbDet .dNet{max-height:34px;max-width:120px;object-fit:contain}
 </style>
 
 <script id="ucPcJs">(function(){
@@ -15662,6 +15701,50 @@ function group(bd){if(!bd||bd.dataset.pcs==='1')return;var kids=[].slice.call(bd
  bd.dataset.pcs='1'}
 window.ucPcGroup=function(){var c=document.getElementById('pfCard');if(!c)return;c.querySelectorAll('.pcBd').forEach(function(b){b.dataset.pcs='';group(b)})};
 var q=0;new MutationObserver(function(){if(q)return;q=requestAnimationFrame(function(){q=0;var c=document.getElementById('pfCard');if(c)c.querySelectorAll('.pcBd:not([data-pcs="1"])').forEach(group)})}).observe(document.body,{childList:true,subtree:true});
+})();</script>
+
+<script id="ucMvJs">(function(){
+"use strict";
+var TMDB_KEY='';/* sahibi: themoviedb.org/settings/api'den alınan ücretsiz v3 anahtarı */
+var $=function(s){return document.querySelector(s)};
+function esc(x){return String(x==null?'':x).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function cssU(u){return String(u).replace(/['"()\\\s]/g,function(c){return encodeURIComponent(c)})}
+window.lbHas=function(m){return !!(m&&(m.b||m.l||m.o||m.d||m.g||m.r||m.mi||m.mr||m.mm||m.mt||m.la||m.n))};
+window.lbDetail=function(m,go){var o=document.getElementById('lbDet');if(!o){o=document.createElement('div');o.id='lbDet';document.body.appendChild(o)}
+ var meta=[];if(m.d)meta.push(esc(m.d));if(m.r)meta.push('<b>'+esc(m.r)+'</b>');if(m.g)meta.push(esc(m.g));
+ var sc=[];if(m.mm)sc.push('<span><em>MC</em>'+esc(m.mm)+'</span>');if(m.mr)sc.push('<span><em>RT</em>'+esc(m.mr)+'</span>');if(m.mi)sc.push('<span><em>IMDb</em>'+esc(m.mi)+'</span>');if(m.mt)sc.push('<span><em>TMDB</em>'+esc(m.mt)+'</span>');if(m.la)sc.push('<span><em>Son yayın</em>'+esc(m.la)+'</span>');
+ var bg=m.b||m.p||'';
+ o.innerHTML='<div class="dBg"></div><button type="button" class="dX" aria-label="Kapat"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 5l14 14M19 5 5 19"/></svg></button><div class="dIn">'+(m.l?'<img class="dLogo" alt="'+esc(m.t)+'" src="'+esc(m.l)+'">':'<h1>'+esc(m.t)+'</h1>')+(meta.length?'<div class="dMeta">'+meta.join('<i></i>')+'</div>':'')+(m.o?'<p class="dO">'+esc(m.o)+'</p>':'')+(sc.length?'<div class="dSc">'+sc.join('')+'</div>':'')+'<div class="dAct"><button type="button" class="dGo">İzle</button>'+(m.n?'<img class="dNet" alt="" src="'+esc(m.n)+'">':'')+'</div></div>';
+ if(bg)o.querySelector('.dBg').style.backgroundImage="url('"+cssU(bg)+"')";var li=o.querySelector('.dLogo');if(li)li.onerror=function(){li.outerHTML='<h1>'+esc(m.t)+'</h1>'};
+ o.classList.add('on');o.scrollTop=0;
+ function cl(){o.classList.remove('on')}
+ o.querySelector('.dX').onclick=cl;o.querySelector('.dGo').onclick=function(){cl();go()};
+ o.onkeydown=null};
+document.addEventListener('keydown',function(e){if(e.key==='Escape'){var o=document.getElementById('lbDet');if(o&&o.classList.contains('on')){o.classList.remove('on');e.stopPropagation()}}},true);
+/* TMDB ile otomatik doldur */
+function key(){var k=TMDB_KEY;try{k=k||localStorage.getItem('budd_tmdb')||''}catch(e){}return k}
+function img(p,w){return p?'https://image.tmdb.org/t/p/'+w+p:''}
+function fd(d){if(!d)return '';var a=String(d).split('-');return a.length===3?a[2]+'/'+a[1]+'/'+a[0]:d}
+function setV(id,v){var e=document.getElementById(id);if(e&&v!=null&&v!==''){e.value=v;e.dispatchEvent(new Event('input',{bubbles:true}))}}
+async function auto(){var t=(($('#lbT')||{}).value||'').trim();if(!t)return toast('Önce film adını yaz','err');
+ var k=key();if(!k){k=prompt('TMDB API anahtarı (themoviedb.org/settings/api, ücretsiz). Sadece bu tarayıcıda saklanır:','');if(!k)return;try{localStorage.setItem('budd_tmdb',k.trim())}catch(e){}k=k.trim()}
+ var b=$('#lbAuto');if(b){b.disabled=true;b.textContent='Aranıyor…'}
+ try{var A='https://api.themoviedb.org/3/',q=function(u){return fetch(A+u+(u.indexOf('?')>0?'&':'?')+'api_key='+encodeURIComponent(k)).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})};
+  var sr=await q('search/multi?language=tr-TR&query='+encodeURIComponent(t)),it=(sr.results||[]).filter(function(x){return x.media_type==='movie'||x.media_type==='tv'})[0];
+  if(!it){toast('TMDB\'de bulunamadı','err');return}
+  var tv=it.media_type==='tv',d=await q((tv?'tv/':'movie/')+it.id+'?language=tr-TR&append_to_response=images,'+(tv?'content_ratings':'release_dates')+'&include_image_language=tr,en,null');
+  setV('lbP',img(d.poster_path,'w500'));setV('lbB',img(d.backdrop_path,'w1280'));
+  var lg=((d.images||{}).logos||[]).filter(function(x){return x.iso_639_1==='tr'})[0]||((d.images||{}).logos||[]).filter(function(x){return x.iso_639_1==='en'})[0]||((d.images||{}).logos||[])[0];setV('lbL',lg?img(lg.file_path,'w500'):'');
+  setV('lbD',fd(tv?d.first_air_date:d.release_date));setV('lbLa',tv?fd(d.last_air_date):'');
+  setV('lbG',(d.genres||[]).map(function(x){return x.name}).slice(0,3).join(', '));setV('lbO',(d.overview||'').slice(0,600));
+  setV('lbS4',d.vote_average?(Math.round(d.vote_average*10)/10).toFixed(1):'');
+  var cert='';if(tv){var r=((d.content_ratings||{}).results||[]);var x=r.filter(function(y){return y.iso_3166_1==='TR'})[0]||r.filter(function(y){return y.iso_3166_1==='US'})[0];cert=x?x.rating:''}
+  else{var r2=((d.release_dates||{}).results||[]);var y2=r2.filter(function(y){return y.iso_3166_1==='TR'})[0]||r2.filter(function(y){return y.iso_3166_1==='US'})[0];cert=y2&&y2.release_dates?((y2.release_dates.filter(function(z){return z.certification})[0]||{}).certification||''):''}
+  setV('lbR',cert);var nw=(d.networks||[])[0];if(nw&&nw.logo_path)setV('lbN',img(nw.logo_path,'w185'));
+  var dt=document.querySelector('.lbDt');if(dt)dt.open=true;toast('TMDB bilgileri dolduruldu','ok')}
+ catch(e){toast('TMDB hatası: anahtarı kontrol et','err')}
+ finally{if(b){b.disabled=false;b.textContent='Otomatik doldur (TMDB)'}}}
+document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('#lbAuto')){e.preventDefault();e.stopPropagation();auto()}},true);
 })();</script>
 </body>
 </html>
