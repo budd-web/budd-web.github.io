@@ -6326,7 +6326,7 @@ function openForm(mode){
  g('mvfAW').style.display=g('mvfS').checked?'block':'none';g('mvForm').classList.add('show');setTimeout(()=>g('mvfT').focus(),50)}
 g('mvfS').onchange=()=>{g('mvfAW').style.display=g('mvfS').checked?'block':'none'};
 g('rtX').onclick=()=>g('rtModal').classList.remove('show');
-g('rtMuz').onclick=()=>{g('rtModal').classList.remove('show');MUZ.create()};
+if(g('rtMuz'))g('rtMuz').onclick=()=>{g('rtModal').classList.remove('show');MUZ.create()};
 g('rtGame').onclick=()=>{g('rtModal').classList.remove('show');if(createRoom())netHost()};
 g('rtFilm').onclick=()=>openLib('create');
 g('mvfNo').onclick=()=>g('mvForm').classList.remove('show');
@@ -6372,7 +6372,7 @@ function pkRender(){
  const lib=(window.srvLib?srvLib():[]).filter(has);if(!arr.length&&!mk.length&&!lib.length){box.append(pkNote(PKD===null?L('Yükleniyor…','Loading…'):PKD.length?L('Sonuç yok','No results'):L('Liste boş. “Link ile ekle”yi kullan.','The list is empty. Use “Add by link”.')));return}
  if(lib.length){const gr=document.createElement('div');gr.className='pkG';lib.forEach(m=>{const b=document.createElement('button');b.type='button';b.className='pkPo';
    const p=document.createElement('span');p.className='pkPi';p.style.setProperty('--h',[...m.t].reduce((h,c)=>(h*31+c.charCodeAt(0))%360,0));if(m.p)p.style.backgroundImage='url("'+m.p.replace(/["\\\s]/g,c=>encodeURIComponent(c))+'")';else p.textContent=(m.t[0]||'?').toUpperCase();
-   const t=document.createElement('span');t.className='pkPt';t.textContent=m.t;b.append(p,t);if(m.a){const a=document.createElement('em');a.textContent='SES';p.append(a)}
+   const t=document.createElement('span');t.className='pkPt';t.textContent=m.t;b.append(p,t);if(m.l){const i=document.createElement('img');i.className='lbLg';i.alt='';i.src=m.l;p.append(i)}if(m.a){const a=document.createElement('em');a.textContent='SES';p.append(a)}
    b.onclick=()=>{const go=()=>{g('mvPick').classList.remove('show');pick({t:m.t,y:'',v:m.v,a:m.a||''})};if(window.lbDetail&&window.lbHas(m))lbDetail(m,go);else go()};gr.append(b)});box.append(gr);
    if(arr.length){const h=document.createElement('div');h.className='pkS';h.textContent=L('Genel liste','General list');box.append(h)}}
  arr.forEach(m=>add(m,pick));
@@ -7388,11 +7388,11 @@ SSP.lib=function(s,own){const{H}=sx,L=s.lib||[];
  const form=own?`<div class="lbF"><div class="lbPv" id="lbPv"><span>Afiş</span></div><div class="lbFd">
   <label class="ssL">Film adı</label><input type="text" id="lbT" maxlength="80" placeholder="Örn. Esaretin Bedeli" autocomplete="off">
   <label class="ssL">Afiş linki <i>(film logosu / poster)</i></label><input type="text" id="lbP" placeholder="https://…/poster.jpg" autocomplete="off">
+  <label class="ssL">Film logosu <i>(başlık yazısı, şeffaf PNG)</i></label><div class="lbLr"><div class="lbLv" id="lbLv"><span>Logo</span></div><input type="text" id="lbL" placeholder="https://…/logo.png" autocomplete="off"></div>
   <label class="ssL">Video linki</label><input type="text" id="lbV" placeholder="https://…/film.mp4 · .m3u8 · YouTube" autocomplete="off">
   <label class="ssL">Ses linki <i>(varsa)</i></label><input type="text" id="lbA" placeholder="https://…/ses.m3u8" autocomplete="off">
   <details class="lbDt"><summary>Film sayfası detayları</summary>
   <button class="btn sm" id="lbAuto" type="button" style="margin:8px 0">Otomatik doldur (TMDB)</button>
-  <label class="ssL">Film logosu <i>(şeffaf PNG linki)</i></label><input type="text" id="lbL" placeholder="https://…/logo.png" autocomplete="off">
   <label class="ssL">Arka plan görseli</label><input type="text" id="lbB" placeholder="https://…/backdrop.jpg" autocomplete="off">
   <label class="ssL">Çıkış tarihi</label><input type="text" id="lbD" maxlength="20" placeholder="15/01/2023" autocomplete="off">
   <label class="ssL">Yaş sınırı</label><input type="text" id="lbR" maxlength="12" placeholder="TV-MA / 16+" autocomplete="off">
@@ -7403,7 +7403,7 @@ SSP.lib=function(s,own){const{H}=sx,L=s.lib||[];
   <label class="ssL">Yayıncı logosu <i>(HBO vb.)</i></label><input type="text" id="lbN" placeholder="https://…/hbo.png" autocomplete="off"></details>
   <div class="pfRow" style="margin-top:14px"><button class="btn sm primary" id="lbAdd" type="button">Kütüphaneye ekle</button></div></div></div>`
   :'<p class="ssNote">Kütüphaneyi sadece sunucu sahibi ('+E(s.o||'')+') düzenleyebilir.</p>';
- const grid=L.length?`<div class="lbG">${L.map(m=>`<div class="lbC"><div class="lbPo" style="--h:${lbHue(m.t)};${m.p?`background-image:url('${lbCss(m.p)}')`:''}">${m.p?'':`<b>${E((m.t[0]||'?').toUpperCase())}</b>`}${m.a?'<em>SES</em>':''}${own?`<button class="lbX" type="button" data-lbdel="${E(m.id)}" title="Sil">${LBX}</button>`:''}</div><span>${E(m.t)}</span></div>`).join('')}</div>`:'<div class="lbEm"><b>Kütüphane boş</b><small>Eklediğin filmler, film odasında "Film seç" dediğinde afişleriyle burada görünür.</small></div>';
+ const grid=L.length?`<div class="lbG">${L.map(m=>`<div class="lbC"><div class="lbPo" style="--h:${lbHue(m.t)};${m.p?`background-image:url('${lbCss(m.p)}')`:''}">${m.p?'':`<b>${E((m.t[0]||'?').toUpperCase())}</b>`}${m.l?`<img class="lbLg" alt="" src="${E(m.l)}">`:''}${m.a?'<em>SES</em>':''}${own?`<button class="lbX" type="button" data-lbdel="${E(m.id)}" title="Sil">${LBX}</button>`:''}</div><span>${E(m.t)}</span></div>`).join('')}</div>`:'<div class="lbEm"><b>Kütüphane boş</b><small>Eklediğin filmler, film odasında "Film seç" dediğinde afişleriyle burada görünür.</small></div>';
  return H('Film Kütüphanesi','Bu sunucunun kendi afişli film listesi. Her şey link ile eklenir; sunucudaki herkes aynı kütüphaneyi görür. ('+L.length+'/100)')+form+'<label class="ssL" style="margin-top:22px">Filmler</label>'+grid};
 document.addEventListener('input',e=>{if(e.target.id!=='lbP')return;const p=$('#lbPv'),u=e.target.value.trim();if(!p)return;if(lbU(u)){p.style.backgroundImage="url('"+u.replace(/['"()\\\s]/g,c=>encodeURIComponent(c))+"')";p.classList.add('has')}else{p.style.backgroundImage='';p.classList.remove('has')}});
 document.addEventListener('click',e=>{const t=e.target.closest&&e.target.closest('#ssPage button');if(!t)return;const s=gs(curSrv);if(!s||!ssOwn(s))return;
@@ -15689,6 +15689,12 @@ html[data-mode="light"] #pfCard .pcSec{background:#00000008}
 #lbDet .dAct{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:6px}
 #lbDet .dGo{all:unset;cursor:pointer;background:#fff;color:#111;border-radius:999px;padding:12px 30px;font-weight:800;font-size:16px}
 #lbDet .dNet{max-height:34px;max-width:120px;object-fit:contain}
+
+.lbLr{display:flex;gap:10px;align-items:center}.lbLr input{flex:1;min-width:0}
+.lbLv{flex:none;width:96px;height:48px;border-radius:8px;background:#16171a center/contain no-repeat;display:grid;place-items:center;font:600 11px system-ui;color:#949ba4;border:1px dashed #ffffff22}
+.lbLv.has{border-style:solid}.lbLv.has span{display:none}
+.lbPo,.pkPi{position:relative}
+.lbLg{position:absolute;left:8%;right:8%;bottom:7%;width:84%;max-height:34%;object-fit:contain;object-position:center bottom;pointer-events:none}
 </style>
 
 <script id="ucPcJs">(function(){
@@ -15744,6 +15750,7 @@ async function auto(){var t=(($('#lbT')||{}).value||'').trim();if(!t)return toas
   var dt=document.querySelector('.lbDt');if(dt)dt.open=true;toast('TMDB bilgileri dolduruldu','ok')}
  catch(e){toast('TMDB hatası: anahtarı kontrol et','err')}
  finally{if(b){b.disabled=false;b.textContent='Otomatik doldur (TMDB)'}}}
+document.addEventListener('input',function(e){if(e.target.id!=='lbL')return;var p=document.getElementById('lbLv'),u=e.target.value.trim();if(!p)return;if(/^https?:\/\/\S{3,2000}$/i.test(u)){p.style.backgroundImage="url('"+cssU(u)+"')";p.classList.add('has')}else{p.style.backgroundImage='';p.classList.remove('has')}});
 document.addEventListener('click',function(e){if(e.target.closest&&e.target.closest('#lbAuto')){e.preventDefault();e.stopPropagation();auto()}},true);
 })();</script>
 </body>
