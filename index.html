@@ -15732,7 +15732,7 @@ function esc(x){return String(x==null?'':x).replace(/[&<>"']/g,function(c){retur
 function cssU(u){return String(u).replace(/['"()\\\s]/g,function(c){return encodeURIComponent(c)})}
 window.lbHas=function(m){return !!(m&&(m.b||m.l||m.o||m.d||m.g||m.r||m.mi||m.mr||m.mm||m.mt||m.la||m.n))};
 function vhost(){var v=document.getElementById('vstage');return v&&v.offsetWidth>0&&v.offsetHeight>0?v:null}
-function place(o){var v=vhost();if(v){if(o.parentNode!==v)v.appendChild(o);o.classList.add('inV')}else{if(o.parentNode!==document.body)document.body.appendChild(o);o.classList.remove('inV')}}
+function place(o){var v=vhost();if(v){if(o.parentNode!==v)v.appendChild(o);if(!o.classList.contains('inV'))o.classList.add('inV')}else{if(o.parentNode!==document.body)document.body.appendChild(o);if(o.classList.contains('inV'))o.classList.remove('inV')}}
 window.lbDetail=function(m,go){var o=document.getElementById('lbDet');if(!o){o=document.createElement('div');o.id='lbDet';document.body.appendChild(o)}place(o);
  var meta=[];if(m.d)meta.push(esc(m.d));if(m.r)meta.push('<b>'+esc(m.r)+'</b>');if(m.g)meta.push(esc(m.g));
  var sc=[];if(m.mm)sc.push('<span><em>MC</em>'+esc(m.mm)+'</span>');if(m.mr)sc.push('<span><em>RT</em>'+esc(m.mr)+'</span>');if(m.mi)sc.push('<span><em>IMDb</em>'+esc(m.mi)+'</span>');if(m.mt)sc.push('<span><em>TMDB</em>'+esc(m.mt)+'</span>');if(m.la)sc.push('<span><em>Son yayın</em>'+esc(m.la)+'</span>');
