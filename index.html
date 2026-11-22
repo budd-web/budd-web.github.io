@@ -2761,7 +2761,7 @@ async function micToggle() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) throw { name: 'NoAPI' };
     ctx = new (window.AudioContext || window.webkitAudioContext)();
     ctx.resume().catch(() => {}); ensureAudio();
-    const _kv = k => { try { const v = localStorage.getItem(k); return v == null ? true : !!JSON.parse(v); } catch (e) { return true; } }; const _ns = _kv('budd_k_ns'), _ec = _kv('budd_k_ec');
+    const _kv = k => { try { const v = localStorage.getItem(k); return v == null ? true : !!JSON.parse(v); } catch (e) { return true; } }; const _ns = _kv('budd_k_ns'), _ec = (function(){ try { return localStorage.getItem('budd_k_ec') == null ? false : _kv('budd_k_ec'); } catch (e) { return false; } })();
     const tries = [{ echoCancellation: _ec, noiseSuppression: _ns, autoGainControl: true, channelCount: 1 }, { echoCancellation: _ec, noiseSuppression: _ns }, true];
     let stream = null, err = null;
     for (const a of tries) {
@@ -6204,7 +6204,7 @@ function recv(d){
  if(d.k==='load'){load(d);return}
  if(!st.on||d.sid!==st.sid)return;
  if(d.k==='sync'&&!isHostMe()){hostT={ct:d.ct,p:!!d.p,at:Date.now()};if(d.sk)fixAt=0;follow(false)}}
-function begin(title,v,a){if(NET.on&&!NET.host){if(st.on){toast(L('Zaten bir film oynuyor','A movie is already playing'),'err');return}send('req',{title:title,v:v,a:a});toast(L('Film isteği odaya gönderildi','Movie request sent'));return}const d={title,v,a,sid:Date.now(),ct:0,p:false};load(d);if(NET.on)netSend(Object.assign({t:'mov',k:'load'},d))}
+function begin(title,v,a){if(NET.on&&!NET.host&&NET.joined){if(st.on){toast(L('Zaten bir film oynuyor','A movie is already playing'),'err');return}send('req',{title:title,v:v,a:a});toast(L('Film isteği odaya gönderildi','Movie request sent'));return}const d={title,v,a,sid:Date.now(),ct:0,p:false};load(d);if(NET.on)netSend(Object.assign({t:'mov',k:'load'},d))}
 setInterval(()=>{if(st.on&&NET.on&&NET.host&&S.screen==='mov'&&vid.readyState>0)bcast()},1500);
 ['waiting','playing','seeked','pause','play'].forEach(e=>bindV(e,()=>{if(isHostMe())bcast()}));
 ['loadedmetadata','canplay','playing'].forEach(e=>bindV(e,()=>follow(false)));
@@ -6214,7 +6214,7 @@ setInterval(()=>{if(!st.on)return;const n=performance.now();let sp=VOICE.on&&VOI
 
 /* ---- arayüz ---- */
 function openScreen(){const m=document.getElementById('mov');if(window.vc&&m&&m.classList.contains('emb')){texts();people();ui();try{window.__vc&&__vc.stageR&&__vc.stageR(true)}catch(e){}return}show('mov');texts();people();ui()}
-function isHostMe(){return !NET.on||NET.host}
+function isHostMe(){return !NET.on||NET.host||!NET.joined}
 function texts(){
  g('mvLogo').textContent=L('FİLM ODASI','MOVIE ROOM');
  g('mvCode').textContent='# '+(S.code||'');g('mvLeave').textContent=t('leave');
@@ -6675,7 +6675,7 @@ function vpv(s,c,v,tr){let o=[];try{if(window.FBX&&FBX.voice)o=(FBX.voice(s.id,c
  return `<div class="vpv"><div class="vpvT">${o.slice(0,5).map((u,i)=>`<div class="vpvC" style="background:${VPC[i%6]}"><span>${PF(u.id,u.name)}</span></div>`).join('')}</div><h2>${E(c.n)}</h2><p>${txt}</p><button class="vpvJ" data-sl="join"${v&&v.st==='conn'?' disabled':''}>${v&&v.st==='conn'?(tr?'Bağlanılıyor…':'Connecting…'):(tr?'Sese Katıl':'Join Voice')}</button></div>`}
 function stageR(force){
  if(!stg||!isS(cur))return;
- const{s,c}=stg,v=W.vc&&W.vc.srv===s.id&&W.vc.ch===c.id?W.vc:null,vo=c.t==='voice',inn=!!(v&&v.st==='in'),host=!NET.on||NET.host,tr=ST.lang!=='en';
+ const{s,c}=stg,v=W.vc&&W.vc.srv===s.id&&W.vc.ch===c.id?W.vc:null,vo=c.t==='voice',inn=!!(v&&v.st==='in'),host=!NET.on||NET.host||!NET.joined,tr=ST.lang!=='en';
  const act=vo&&window.MOV&&MOV.on()?'mov':vo&&window.MUZ&&MUZ.on()?'muz':null,ps=inn?Object.values(S.players):[],bs=inn&&vo&&window.FBX?FBX.voice(s.id,c.id).filter(u=>u.bot):[];
  const sig=[c.id,v&&v.st,act,VOICE.on,deaf,host,ST.lang,S.meta&&S.meta.game,ps.map(p=>p.id+p.name+(!vo?'':sp(p.id))+(p.bot?'b':'')).join()+bs.map(u=>u.id+u.name+(BOTPR[u.id]&&BOTPR[u.id].pl?1:0)).join(),window.vidSig?vidSig():''].join('|');
  if(!force&&sig===stg.sig)return;stg.sig=sig;
@@ -6779,7 +6779,7 @@ function init(){W.go=go;W.chatIn=(k,m)=>{if(!CH[k]||!m||!m.id)return;const o=sto
   const gm=e.target.closest('[data-gm]');
   if(gm){if(NET.on&&!NET.host){toast('Oyunu oda sahibi seçer');return}if(!S.meta)return;S.meta.game=gm.dataset.gm;try{bsLobbyUI()}catch(x){}netSend({t:'act',k:'game',g:S.meta.game});stageR(true);return}
   const vb=e.target.closest('[data-vc]');if(vb){vcAct(vb.dataset.vc);return}
-  const b=e.target.closest('[data-sl]');if(!b||!stg)return;const a=b.dataset.sl,host=!NET.on||NET.host;
+  const b=e.target.closest('[data-sl]');if(!b||!stg)return;const a=b.dataset.sl,host=!NET.on||NET.host||!NET.joined;
   if(a==='mic'){try{micToggle()}catch(x){}setTimeout(()=>stageR(true),400)}
   else if(a==='deaf'){setDeaf(!deaf);stageR(true)}
   else if(a==='leave'){W.want=null;leaveRoom()}
@@ -6995,7 +6995,7 @@ function actHub(){const old=document.getElementById('actHub');if(old){old.remove
  o.innerHTML='<div class="ahB"><button type="button" class="ahX">×</button><div class="ahH"><h3>'+(tr?'Etkinlikler':'Activities')+'</h3><p>'+(tr?'Odada anında birlikte izle ve dinle!':'Watch and listen together instantly!')+'</p></div><div class="ahS">'+(on?'<button type="button" class="ahOff" data-ah="off">'+(tr?'Etkinliği kapat':'Stop activity')+'</button>':'')+'<div class="ahG">'+c1+'</div></div></div>';
  document.body.appendChild(o);
  o.onclick=e=>{if(e.target===o||e.target.closest('.ahX')){o.remove();return}
-  const c=e.target.closest('[data-ah]');if(!c)return;const k=c.dataset.ah,host=!NET.on||NET.host;
+  const c=e.target.closest('[data-ah]');if(!c)return;const k=c.dataset.ah,host=!NET.on||NET.host||!NET.joined;
   if(k==='off'){o.remove();askOff(actNow());try{dkMark()}catch(x){}return}
   if(!host&&k!=='film'){toast(tr?'Etkinliği oda sahibi başlatır':'The host starts activities');return}if(k==='film'&&!host&&actNow()==='mov'){toast(tr?'Zaten bir film oynuyor':'A movie is already playing');return}
   o.remove();try{focusVoice()}catch(x){}
@@ -7017,7 +7017,7 @@ $('#dock').addEventListener('click',e=>{
  if(e.target.closest('#vcLeave')){W.want=null;leaveRoom();return}
  const v=e.target.closest('[data-vc]');if(v&&v.closest('#vcPanel')){vcAct(v.dataset.vc);return}
  const sn=e.target.closest('[data-sn]');if(sn){const i=+sn.dataset.sn;sndPlay(i);netSend({t:'snd',i,from:UID});return}
- const a=e.target.closest('[data-ak]');if(!a)return;const k=a.dataset.ak,host=!NET.on||NET.host;dkClose();
+ const a=e.target.closest('[data-ak]');if(!a)return;const k=a.dataset.ak,host=!NET.on||NET.host||!NET.joined;dkClose();
  if(!host&&k!=='film'){toast('Etkinliği oda sahibi başlatır');return}if(!host&&actNow()==='mov'){toast('Zaten bir film oynuyor');return}try{focusVoice()}catch(x){}
  if(k==='film')document.getElementById('rtFilm').click();
  else if(k==='music'){if(window.MOV&&MOV.on())MOV.stop();MUZ.start()}
@@ -9737,7 +9737,7 @@ function fAction(a,u){
 const IC={film:'🎬',dizi:'📺',muzik:'🎵'},TN={film:'Film',dizi:'Dizi',muzik:'Müzik'};
 const allMk=()=>SEED.concat(MK).sort((a,b)=>b.ts-a.ts);
 window.mkItems=()=>[]||allMk().filter(i=>i.k==='film'||i.k==='dizi').flatMap(i=>i.k==='film'?[{t:i.n,y:'Keşfet',id:i.id,i:0}]:i.l.map((x,n)=>({t:i.n+' – B'+(n+1)+': '+x.t,y:'Dizi',id:i.id,i:n})));
-window.mkPlay=(id,n)=>{const it=allMk().find(x=>x.id===id);if(it)play(it,n||0)};
+window.mkAll=allMk;window.mkPlay=(id,n)=>{const it=allMk().find(x=>x.id===id);if(it)play(it,n||0)};
 function mkR(){const p=$('#mktMain');if(!p)return;
  p.innerHTML=`<div class="fHd"><span class="fT"><svg viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm4.2 5.8-2.1 5.7-5.7 2.7 2.1-5.7z"/></svg>Keşfet</span>${[['all','Hepsi'],['film','Filmler'],['dizi','Diziler']].map(([k,l])=>`<button class="fTab${mt===k?' on':''}" data-mt="${k}">${l}</button>`).join('')}<i class="fSp"></i><button class="fTab add" data-mo="new">+ Paylaş</button></div><div class="fBd"><input class="fq" id="mQ" placeholder="Film, dizi ya da müzik ara" value="${E(mq)}"><div id="mList"></div></div>`;ml()}
 function ml(){const b=$('#mList');if(!b)return;const q=mq.toLowerCase(),a=allMk().filter(i=>(mt==='all'||i.k===mt)&&(!q||(i.n+i.d+i.by).toLowerCase().includes(q)));
@@ -16009,9 +16009,9 @@ var IC={
  srch:'<svg viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.6-.6 3.1-1.6 4.2l.3.3h.8l5 5-1.5 1.5-5-5v-.8l-.3-.3A6.5 6.5 0 1 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5z"/></svg>',
  sort:'<svg viewBox="0 0 24 24"><path d="M9 3 5 7h3v7h2V7h3m3 10v-7h-2v7h-3l4 4 4-4z"/></svg>',
  ok:'<svg viewBox="0 0 24 24"><path d="M9.5 17.6 4.4 12.5l2-2 3.1 3.1 8-8 2 2z"/></svg>'};
-var CATS=[['home','Ana Sayfa'],['game','Oyun'],['music','Müzik'],['tv','Eğlence'],['sci','Bilim ve Teknoloji'],['edu','Eğitim'],['hub','Öğrenci Toplulukları'],['quest','Görevler'],['film','Film ve Dizi Pazarı']];
+var CATS=[['all','Tümü','home'],['film','Film','film'],['dizi','Dizi','tv'],['muzik','Müzik','music']],TNm={film:'Film',dizi:'Dizi',muzik:'Müzik'},EMo={film:'🎬',dizi:'📺',muzik:'🎵'},dq='';
 var EXT=[['Müzik Çalar','Kanallarda müzik ara ve dinle.','mu'],['Film ve Dizi','Birlikte film izleme odaları.','fl'],['Botlar','Sunucularına bot ve webhook ekle.','bt'],['Temalar','Arayüz renk temaları.','th'],['Rozetler','Profil rozetleri ve sayaçlar.','bd'],['Jeton Sistemi','Sunucu içi jeton ve ödüller.','cn']];
-var tab='srv',cat=0;
+var tab='srv',cat='all';
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function hue(s){var h=0;for(var i=0;i<s.length;i++)h=(h*31+s.charCodeAt(i))%360;return h}
 function srvs(){return $$('#srvList .rb.srv').map(function(b){var ic=b.querySelector('.sIc'),bg=ic&&ic.style.backgroundImage;return{id:b.dataset.srv,n:b.title||b.dataset.srv,im:bg&&bg!=='none'?bg:'',t:(b.title||'?').trim().slice(0,2).toUpperCase()}})}
@@ -16029,6 +16029,10 @@ function art(){
  s+=isl(1020,190,180,100,'#4db35c','#8a3b4a')+tree(1070,196,1.2)+'<circle cx="1125" cy="200" r="10" fill="#4aa8ff"/><circle cx="1150" cy="204" r="9" fill="#ff5fa2"/>';
  s+=star(330,60,6,.8)+star(900,30,5,.7)+star(870,220,5,.8)+star(600,24,4,.5)+star(300,250,5,.6)+'<path d="M290 46l10 14-10 14-10-14z" fill="#8fa0ff" opacity=".6"/><path d="M880 80l7 10-7 10-7-10z" fill="#8fa0ff" opacity=".6"/></svg>';
  return s}
+function dcards(){var q=dq.toLowerCase().trim(),all=[];try{all=(window.mkAll?window.mkAll():[])}catch(e){}
+ var l=all.filter(function(i){return(cat==='all'||i.k===cat)&&(!q||((i.n||'')+' '+(i.d||'')+' '+(i.by||'')).toLowerCase().indexOf(q)>=0)});
+ if(!l.length)return '<div class="emp">'+(q?'Aramana uygun sonuç yok.':'Burada henüz bir şey yok.')+'</div>';
+ return l.map(function(i){var hu=hue(i.n||'x'),n=(i.l||[]).length;return '<div class="pcd" data-mk="'+esc(i.id)+'"><div class="pv" style="background:linear-gradient(160deg,hsl('+hu+' 55% 40%),hsl('+(hu+50)+' 55% 18%))"><span>'+(EMo[i.k]||'🎬')+'</span><em>'+(TNm[i.k]||'')+'</em></div><b>'+esc(i.n)+'</b><small>'+esc(i.by||'')+' · '+(i.k==='film'?'1 parça':n+(i.k==='dizi'?' bölüm':' şarkı'))+'</small></div>'}).join('')}
 function banner(h){return 'linear-gradient(135deg,hsl('+h+' 70% 45%),hsl('+(h+50)+' 75% 35%))'}
 function render(){
  var T=$('#hub .hbTop');$$('button',T).forEach(function(b){b.classList.toggle('on',b.dataset.t===tab)});
@@ -16037,11 +16041,8 @@ function render(){
   h+='<div class="tl"><input class="in" id="hbF" placeholder="Sunucu bul"><button class="pl" type="button" id="hbS">'+IC.sort+'Son aktif</button><button class="pl" type="button"><span class="ck">'+IC.ok+'</span>Sessize alınan sunucuları kenar çubuğundan gizle</button></div><div class="sg" id="hbG">'+
   S.map(function(s){return '<div class="sc" data-srv="'+esc(s.id)+'" data-n="'+esc(s.n.toLowerCase())+'"><div class="si" style="'+(s.im?'background-image:'+s.im:'background:'+banner(hue(s.id)))+'">'+(s.im?'':esc(s.t))+'</div><div><b>'+esc(s.n)+'</b><em class="g">1 çevrimiçi</em><em>1 üye</em><br>Son görülme: '+new Date().toLocaleString('tr-TR',{hour:'2-digit',minute:'2-digit',day:'numeric',month:'long',year:'numeric'})+'</div></div>'}).join('')+(S.length?'':'<div class="emp">Henüz sunucun yok.</div>')+'</div>';
  }else if(tab==='disc'){
-  var F=S.slice(0,3),fill=[['Müzik Odası','Birlikte müzik dinle, liste paylaş.',200],['Film Gecesi','Haftalık film ve dizi buluşmaları.',320],['Oyun Kampı','Takım kur, birlikte oyna.',140]];
-  var cards=F.map(function(s){return{n:s.n,d:'Resmi topluluk sunucusu.',id:s.id,im:s.im,t:s.t,hu:hue(s.id)}});
-  fill.forEach(function(f){if(cards.length<3)cards.push({n:f[0],d:f[1],hu:f[2],t:f[0].slice(0,2).toUpperCase()})});
-  h+='<div class="dsc"><div class="dsNav">'+CATS.map(function(c,i){return '<button type="button" data-c="'+i+'" class="'+(i===cat?'on':'')+'">'+IC[c[0]]+c[1]+'</button>'}).join('')+'</div><div class="dsMain"><div class="hero">'+art()+'<h2>Topluluğunu Budd\'da bul</h2><p>Oyundan müziğe, öğrenmeye kadar herkes için bir yer var.</p><div class="sb"><input placeholder="Toplulukları keşfet">'+IC.srch+'</div></div><h3 class="ft">Öne çıkan topluluklar</h3><div class="cards">'+
-  cards.map(function(c){return '<div class="cd"'+(c.id?' data-srv="'+esc(c.id)+'"':'')+'><div class="bn" style="background:'+banner(c.hu)+'"><div class="ic" style="'+(c.im?'background-image:'+c.im+';background-size:cover':'background:'+banner(c.hu))+'">'+(c.im?'':esc(c.t))+'</div></div><div class="tx"><b><i></i>'+esc(c.n)+'</b><small>'+esc(c.d)+'</small></div></div>'}).join('')+'</div></div></div>';
+  var ttl=cat==='all'?'Öne çıkanlar':cat==='film'?'Filmler':cat==='dizi'?'Diziler':'Müzik';
+  h+='<div class="dsc"><div class="dsNav">'+CATS.map(function(c){return '<button type="button" data-c="'+c[0]+'" class="'+(c[0]===cat?'on':'')+'">'+IC[c[2]]+c[1]+'</button>'}).join('')+'</div><div class="dsMain"><div class="hero">'+art()+'<h2>Film, dizi ve müziği keşfet</h2><p>Birlikte izle, birlikte dinle.</p><div class="sb"><input id="hbQ" placeholder="Film, dizi ya da müzik ara" value="'+esc(dq)+'" autocomplete="off">'+IC.srch+'</div></div><h3 class="ft">'+ttl+'</h3><div class="pgrid" id="hbP">'+dcards()+'</div></div></div>';
  }else{
   var on={};try{on=JSON.parse(localStorage.getItem('budd_ext')||'{}')}catch(e){}
   h+='<div class="tl"><input class="in" placeholder="Eklenti bul"></div><div class="sg" style="gap:14px">'+EXT.map(function(e){return '<div class="ex"><div class="ei">'+EX+'</div><div><b>'+e[0]+'</b><small>'+e[1]+'</small></div><button type="button" class="tg'+(on[e[2]]!==false?' on':'')+'" data-x="'+e[2]+'" aria-label="'+e[0]+'"></button></div>'}).join('')+'</div>';
@@ -16054,11 +16055,12 @@ function build(){var H=$('#hub');if(H)return H;H=document.createElement('div');H
  var home=$('#home')||document.body;home.appendChild(H);
  H.addEventListener('click',function(e){var t=e.target,b;
   if(b=t.closest('.hbTop button')){tab=b.dataset.t;render();return}
-  if(b=t.closest('.dsNav button')){if(b.dataset.c==='8'){close();if(window.go)go('mkt');return}cat=+b.dataset.c;$$('.dsNav button',H).forEach(function(x){x.classList.toggle('on',x===b)});return}
+  if(b=t.closest('.dsNav button')){cat=b.dataset.c;render();return}
+  if(b=t.closest('.pcd[data-mk]')){var mid=b.dataset.mk;close();if(window.go)go('mkt');setTimeout(function(){var c=document.querySelector('#mktMain [data-mo="'+mid+'"]');if(c)c.click()},220);return}
   if(b=t.closest('.tg')){b.classList.toggle('on');var o={};try{o=JSON.parse(localStorage.getItem('budd_ext')||'{}')}catch(_){}o[b.dataset.x]=b.classList.contains('on');try{localStorage.setItem('budd_ext',JSON.stringify(o))}catch(_){}return}
   if(b=t.closest('[data-srv]')){var r=$('#srvList .rb.srv[data-srv="'+b.dataset.srv+'"]');close();r&&r.click();return}
   if(t.closest('#hbS')){var g=$('#hbG');if(g)$$('.sc',g).reverse().forEach(function(c){g.appendChild(c)})}});
- H.addEventListener('input',function(e){if(e.target.id==='hbF'){var q=e.target.value.toLowerCase();$$('#hbG .sc').forEach(function(c){c.style.display=c.dataset.n.indexOf(q)<0?'none':''})}});
+ H.addEventListener('input',function(e){if(e.target.id==='hbQ'){dq=e.target.value;var g=$('#hbP');if(g)g.innerHTML=dcards();return}if(e.target.id==='hbF'){var q=e.target.value.toLowerCase();$$('#hbG .sc').forEach(function(c){c.style.display=c.dataset.n.indexOf(q)<0?'none':''})}});
  return H}
 function patch(){
  var m=$('#rMenu');if(m&&!$('[data-a="ext"]',m)){var b=document.createElement('button');b.dataset.a='ext';b.innerHTML=EX+'<span>Eklentiler</span>';m.insertBefore(b,m.children[2]||null)}
@@ -16072,5 +16074,36 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')close()});
 patch();setInterval(patch,500);
 window.buddHub={open:open,close:close};
 })();</script>
+<style id="v102Css">
+/* Keşfet: afiş ızgarası */
+#hub .pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:18px}
+#hub .pcd{cursor:pointer;min-width:0}
+#hub .pcd .pv{position:relative;aspect-ratio:2/3;border-radius:14px;display:grid;place-items:center;overflow:hidden;box-shadow:0 10px 28px #0006;transition:transform .15s,filter .15s}
+#hub .pcd:hover .pv{transform:translateY(-3px);filter:brightness(1.1)}
+#hub .pcd .pv span{font-size:52px;filter:drop-shadow(0 4px 10px #0008)}
+#hub .pcd .pv em{position:absolute;left:8px;top:8px;font:800 11px/1 inherit;font-style:normal;background:#000a;color:#fff;border-radius:6px;padding:4px 7px}
+#hub .pcd b{display:block;margin-top:9px;font:700 14px/1.25 inherit;font-family:inherit;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#hub .pcd small{display:block;margin-top:2px;color:var(--hbM);font:500 12px/1.3 inherit;font-family:inherit;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* Film detay: her şey üstte, logonun arkasında siyah gölge */
+#lbDet .dWrap{min-height:0!important;align-items:flex-start!important;padding-top:84px!important;padding-bottom:40px!important}
+#lbDet .dPo{align-self:flex-start}
+#lbDet .dIn{position:relative;isolation:isolate;align-self:flex-start;justify-content:flex-start}
+#lbDet .dIn::before{content:"";position:absolute;z-index:-1;left:-48px;top:-36px;width:min(640px,calc(100% + 80px));height:230px;background:radial-gradient(ellipse 60% 55% at 38% 42%,rgba(0,0,0,.88) 0,rgba(0,0,0,.6) 45%,transparent 75%);pointer-events:none}
+#lbDet .dLogo{filter:drop-shadow(0 0 14px rgba(0,0,0,.95)) drop-shadow(0 8px 28px rgba(0,0,0,.9))}
+#lbDet h1{text-shadow:0 4px 24px #000,0 0 40px #000}
+#lbDet .dBg::after{background:linear-gradient(0deg,var(--ob,#121212) 4%,color-mix(in srgb,var(--ob,#121212) 60%,transparent) 55%,rgba(0,0,0,.55) 100%)}
+/* Sol alt panel: içerik taşmasın, panel içeriğe göre büyüsün */
+#dock{width:324px!important;max-height:calc(100dvh - 16px);box-sizing:border-box}
+#dock #vcPanel{height:auto!important;min-height:0;overflow:visible;box-sizing:border-box;padding:16px 16px 14px!important}
+#dock #vcPanel .vb{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+#dock #vcPanel .vb button{height:52px;min-width:0}
+#dock #vcPanel .vt{min-width:0}
+#dock #vcPanel small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#dock .me{height:76px!important;min-width:0;overflow:visible;box-sizing:border-box;padding:0 10px!important}
+#dock .me .mi{flex:1 1 0;min-width:0}
+#dock .cg,#dock .gearB{flex:none}
+body:has(#vcPanel[style*="block"]) #side,body:has(#vcPanel[style*="block"]) #rail{padding-bottom:290px!important}
+#side{padding-bottom:96px!important}
+</style>
 </body>
 </html>
