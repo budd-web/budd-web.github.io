@@ -6608,28 +6608,13 @@ function cur(){try{if(yt&&ready&&yt.getCurrentTime)return yt.getCurrentTime()||0
 function dur(){try{if(yt&&ready&&yt.getDuration)return yt.getDuration()||0}catch(e){}return 0}
 function fmt(s){s=Math.max(0,Math.floor(s||0));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
 /* --- YouTube gizli oynatıcı (sadece ses, görüntü ekran dışı) --- */
-/* --- Reklamsız ses: YouTube gömülü oynatıcı yerine Invidious/Piped ses akışı + <audio> --- */
-var AC={},INS=null,FB=[['p','https://pipedapi.kavin.rocks'],['i','https://yewtu.be'],['i','https://inv.nadeko.net']];
-function jf(u,ms){var c=new AbortController(),t=setTimeout(function(){c.abort()},ms||6000);return fetch(u,{signal:c.signal}).then(function(r){clearTimeout(t);if(!r.ok)throw 0;return r.json()})}
-function insts(){return INS||(INS=Promise.all([
- jf('https://api.invidious.io/instances.json?sort_by=type,health').then(function(j){return j.filter(function(x){return x[1]&&x[1].api&&x[1].type==='https'}).map(function(x){return['i',x[1].uri]})}).catch(function(){return[]}),
- jf('https://piped-instances.kavin.rocks/').then(function(j){return j.map(function(x){return['p',x.api_url]})}).catch(function(){return[]})
-]).then(function(a){return a[0].slice(0,8).concat(a[1].slice(0,8),FB)}))}
-function best(a,m){a=(a||[]).filter(function(f){return /audio/.test(f.mimeType||f.type||'')});return a.filter(function(f){return /mp4/.test(f.mimeType||f.type)}).concat(a).sort(function(x,y){return(+y.bitrate||0)-(+x.bitrate||0)})[0]}
-function tryI(x,id){var b=x[1].replace(/\/$/,'');
- if(x[0]==='p')return jf(b+'/streams/'+id,8000).then(function(j){var f=best(j.audioStreams);if(!f)throw 0;return f.url});
- return jf(b+'/api/v1/videos/'+id+'?local=true&fields=adaptiveFormats',8000).then(function(j){var f=best(j.adaptiveFormats);if(!f)throw 0;return f.url[0]==='/'?b+f.url:f.url})}
-function audioUrl(id){if(AC[id])return AC[id];var p=AC[id]=insts().then(function(L){return new Promise(function(ok,no){var i=0,w=0;function nx(){if(i>=L.length){if(!w)no();return}w++;tryI(L[i++],id).then(ok,function(){w--;nx()})}nx();nx();nx()})});p.catch(function(){delete AC[id]});return p}
-function mk(){if(yt)return;var a=new Audio();a.preload='auto';a.volume=vol/100;
- yt={_ld:0,getCurrentTime:function(){return a.currentTime||0},getDuration:function(){return isFinite(a.duration)?a.duration:0},
-  getPlayerState:function(){return a.ended?0:a.paused?(yt._ld?3:2):a.readyState<3?3:1},
-  setVolume:function(v){a.volume=v/100},seekTo:function(x){try{a.currentTime=x}catch(e){}},
-  playVideo:function(){a.play().catch(function(){})},pauseVideo:function(){a.pause()},
-  stopVideo:function(){a.pause();a.removeAttribute('src')},destroy:function(){a.pause();a.removeAttribute('src')},
-  _load:function(o,auto){var me=yt,id=o.videoId;me._ld=1;a.pause();audioUrl(id).then(function(u){if(yt!==me||curId!==id)return;me._ld=0;a.src=u;a.onloadedmetadata=function(){if(o.startSeconds>0)try{a.currentTime=o.startSeconds}catch(e){}};if(auto)a.play().catch(function(){})}).catch(function(){me._ld=0;if(yt===me&&curId===id)onEr()})},
-  loadVideoById:function(o){yt._load(o,1)},cueVideoById:function(o){yt._load(o,0)}};
- a.onplaying=function(){onSt({data:1})};a.onended=function(){onSt({data:0})};a.onerror=function(){if(a.getAttribute('src'))onEr()};
- ready=true;var f=q;q=[];f.forEach(function(c){c()})}
+/* --- YouTube gizli oynatıcı (film odasıyla aynı ayarlar; sadece ses) --- */
+function loadAPI(){return new Promise(function(ok,no){if(w.YT&&YT.Player)return ok();var prev=w.onYouTubeIframeAPIReady;w.onYouTubeIframeAPIReady=function(){try{prev&&prev()}catch(e){}ok()};if(!document.querySelector('script[src*="youtube.com/iframe_api"]')){var s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';s.onerror=no;document.head.appendChild(s)}setTimeout(function(){if(!(w.YT&&YT.Player))no()},15000)})}
+function build(alt){var pv={autoplay:1,controls:0,disablekb:1,playsinline:1,rel:0,fs:0,modestbranding:1,iv_load_policy:3,cc_load_policy:0,enablejsapi:1};if(/^https?:$/.test(location.protocol))pv.origin=location.origin;
+ var o={width:200,height:200,playerVars:pv,events:{onReady:function(){ready=true;try{yt.setVolume(vol)}catch(e){}var f=q;q=[];f.forEach(function(c){c()})},onStateChange:onSt,
+  onError:function(e){var c=+(e&&e.data)||-1;if(!alt&&(c===101||c===150||c===152||c===153)){try{yt.destroy()}catch(x){}ready=false;curId='';g('muYtW').innerHTML='<div id="muYtH"></div>';build(true);apply();return}onEr()}}};
+ if(alt)o.host='https://www.youtube-nocookie.com';yt=new YT.Player('muYtH',o)}
+function mk(){if(yt)return;yt='pend';loadAPI().then(function(){if(!M.on){yt=null;return}build(false)}).catch(function(){yt=null;g('muWarn').textContent='YouTube yüklenemedi, bağlantını kontrol et.'})}
 /* --- LRCLIB senkron sözler (remiks/slowed/cover vb. atlanır) + sol alt mini oynatıcı --- */
 var BAD=/remix|\bmix\b|sped|slowed|nightcore|cover|8d|reverb|bass ?boost|\bedit\b|karaoke|mashup|\blive\b|instrumental/i,LY=[],lyK='',lyI=-2,npK='';
 function clean(s){return String(s||'').replace(/[\(\[][^\)\]]*[\)\]]/g,' ').replace(/official|music video|video|audio|lyrics?|\bhd\b|4k|\b(ft|feat)\b\.?.*/ig,' ').replace(/\s+/g,' ').trim()}
