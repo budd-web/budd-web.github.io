@@ -6563,6 +6563,11 @@ html,body,button,input,select{font-family:'Plus Jakarta Sans',system-ui,-apple-s
 #muTap{display:none}#muTap.on{display:inline-flex}
 @media(max-width:820px){.muWrap{grid-template-columns:1fr;padding:4px 14px 20px;gap:18px}.muArt{width:min(300px,66vw);border-radius:36px}.muTitle{font-size:24px}}
 </style><style id="muzCss">
+#muz .muMain{justify-content:flex-start;margin:auto 0;gap:10px;padding:4px}#muz .muWrap{padding:4px 20px 16px}
+#muz .muArt{width:min(390px,72vw,34vh);font-size:64px}#muz .muTitle{font-size:clamp(20px,3.4vh,28px);margin-top:4px}
+#muz .muB{width:48px;height:48px}#muz .muB.pp{width:64px;height:64px}
+#muz .muLy{min-height:84px;padding:10px 16px}#muz .muLy b{font-size:clamp(16px,2.6vh,20px)}
+#muz .muEq{display:none!important}
 .muLy{width:min(460px,100%);min-height:96px;display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;padding:14px 18px;border-radius:24px;background:rgb(from var(--ovc,#ffffff) r g b / .07);backdrop-filter:blur(14px);box-sizing:border-box;text-align:center}
 .muLy:empty{display:none}.muLy p{margin:0;font-size:14px;opacity:.45;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.muLy b{font:700 20px/1.3 var(--ui);max-width:100%}
 #muz .muArt{border-radius:34px;box-shadow:0 24px 80px #000a,0 0 0 1px #ffffff14}#muz #muSeek{height:5px}#muz .muB.pp{background:linear-gradient(135deg,#4ff5d3,#8b7bff);color:#06121a}
@@ -6570,7 +6575,7 @@ html,body,button,input,select{font-family:'Plus Jakarta Sans',system-ui,-apple-s
 .vcNp img{width:38px;height:38px;border-radius:10px;object-fit:cover;flex:none}.vcNp div{min-width:0;flex:1}.vcNp b{display:block;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.vcNp small{display:block;opacity:.7;font-size:12px}
 .vcNp i{width:14px;height:14px;flex:none;border-radius:50%;background:#4ff5d3;opacity:.35}.vcNp i.on{opacity:1;animation:vcNpP 1.2s ease-in-out infinite}@keyframes vcNpP{50%{transform:scale(.6)}}
 body:has(#vcPanel[style*="block"] .vcNp.on) #side,body:has(#vcPanel[style*="block"] .vcNp.on) #rail{padding-bottom:360px!important}
-#muYtW{position:fixed;left:-9999px;top:0;width:200px;height:200px;overflow:hidden;pointer-events:none}
+#muYtW{position:fixed;right:0;bottom:0;width:200px;height:200px;overflow:hidden;pointer-events:none;opacity:.01;z-index:-1}
 #muz .muArt{cursor:pointer}
 #muz .muWarn{color:#ffb44d;font-size:13px;min-height:17px;max-width:400px}
 #muz .muRow input{height:40px;border:0;border-radius:8px;padding:0 12px;background:#0005;color:inherit;font:inherit}
@@ -6616,20 +6621,23 @@ function build(alt){var pv={autoplay:1,controls:0,disablekb:1,playsinline:1,rel:
  if(alt)o.host='https://www.youtube-nocookie.com';yt=new YT.Player('muYtH',o)}
 function mk(){if(yt)return;yt='pend';loadAPI().then(function(){if(!M.on){yt=null;return}build(false)}).catch(function(){yt=null;g('muWarn').textContent='YouTube yüklenemedi, bağlantını kontrol et.'})}
 /* --- LRCLIB senkron sözler (remiks/slowed/cover vb. atlanır) + sol alt mini oynatıcı --- */
-var BAD=/remix|\bmix\b|sped|slowed|nightcore|cover|8d|reverb|bass ?boost|\bedit\b|karaoke|mashup|\blive\b|instrumental/i,LY=[],lyK='',lyI=-2,npK='';
+var BAD=/remix|\bmix\b|sped|slowed|nightcore|cover|8d|reverb|bass ?boost|\bedit\b|karaoke|mashup|\blive\b|instrumental/i,LY=[],lyK='',lyI=-2,npK='',lyS='',lyD=null;
 function clean(s){return String(s||'').replace(/[\(\[][^\)\]]*[\)\]]/g,' ').replace(/official|music video|video|audio|lyrics?|\bhd\b|4k|\b(ft|feat)\b\.?.*/ig,' ').replace(/\s+/g,' ').trim()}
 function lrc(s){var r=[];String(s).split('\n').forEach(function(l){var m,re=/\[(\d+):(\d+(?:\.\d+)?)\]/g,ts=[],tx=l.replace(/\[[^\]]*\]/g,'').trim();while(m=re.exec(l))ts.push(+m[1]*60+ +m[2]);ts.forEach(function(x){r.push({s:x,t:tx})})});return r.sort(function(a,b){return a.s-b.s})}
-function lyLoad(t){var k=lyK=t.id+'|'+t.t;LY=[];lyI=-2;if(BAD.test(t.t))return;
- var ti=clean(t.t).replace(/ - /g,' '),q=(ti.toLowerCase().indexOf(clean(t.a).toLowerCase())>=0?'':clean(t.a)+' ')+ti;
- jf('https://lrclib.net/api/search?q='+encodeURIComponent(q),9000).then(function(a){if(lyK!==k)return;a=a.filter(function(x){return x.syncedLyrics&&!x.instrumental&&!BAD.test(x.trackName||'')});var d=dur(),b=(d&&a.filter(function(x){return Math.abs(x.duration-d)<4})[0])||a[0];if(b){LY=lrc(b.syncedLyrics);lyI=-2}}).catch(function(){})}
-function lyTick(){var t=M.l[M.i],el=g('muLy');if(!el)return;if(t&&t.t&&lyK!==t.id+'|'+t.t)lyLoad(t);if(!t){LY=[];lyK=''}
- if(!LY.length){if(lyI!==-3){lyI=-3;el.innerHTML=''}return}
+function jf(u,ms){var c=new AbortController(),t=setTimeout(function(){c.abort()},ms||8000);return fetch(u,{signal:c.signal}).then(function(r){clearTimeout(t);if(!r.ok)throw 0;return r.json()})}
+function lyLoad(t){var k=lyK=t.id+'|'+t.t;LY=[];lyI=-2;if(BAD.test(t.t)){lyS='Remiks / özel sürüm: söz yok';return}
+ var e=encodeURIComponent,ti=clean(t.t),m=ti.match(/^(.+?)\s+[-–—]\s+(.+)$/),A=m?m[1]:clean(t.a),N=m?m[2]:ti,B='https://lrclib.net/api/search?',
+ urls=[B+'track_name='+e(N)+'&artist_name='+e(A),B+'q='+e(A+' '+N),B+'q='+e(N)];lyS='Sözler aranıyor…';
+ (function nx(n){if(lyK!==k)return;if(n>=urls.length){lyS='Bu şarkı için senkron söz bulunamadı';return}
+  jf(urls[n]).then(function(a){if(lyK!==k)return;a=(Array.isArray(a)?a:[]).filter(function(x){return x.syncedLyrics&&!x.instrumental&&!BAD.test(x.trackName||'')});var d=dur(),b=(d&&a.filter(function(x){return Math.abs(x.duration-d)<5})[0])||a[0];if(b){LY=lrc(b.syncedLyrics);lyI=-2;lyS=''}else nx(n+1)}).catch(function(){nx(n+1)})})(0)}
+function lyTick(){var t=M.l[M.i],el=g('muLy');if(!el)return;if(t&&t.t&&lyK!==t.id+'|'+t.t)lyLoad(t);if(!t){LY=[];lyK='';lyS=''}
+ if(!LY.length){if(lyD!==lyS){lyD=lyS;el.innerHTML=lyS?'<p>'+esc(lyS)+'</p>':''}lyI=-3;return}lyD=null;
  var c=cur()+.15,i=-1;for(var j=0;j<LY.length&&LY[j].s<=c;j++)i=j;if(i===lyI)return;lyI=i;
  var L=function(j){return LY[j]?(esc(LY[j].t)||'♪'):'&nbsp;'};el.innerHTML='<p>'+L(i-1)+'</p><b>'+(i<0?'♪':L(i))+'</b><p>'+L(i+1)+'</p>'}
 function np(){var vp=document.getElementById('vcPanel'),t=M.on&&M.l[M.i],e=vp&&vp.querySelector('.vcNp');if(!vp)return;
  if(!t){if(e)e.classList.remove('on');npK='';return}
  if(!e){e=document.createElement('div');e.className='vcNp';var sb=g('vcSub');if(!sb)return;sb.parentNode.insertBefore(e,sb.nextSibling)}
- var k=t.id+t.t+t.a+M.p;if(k!==npK){npK=k;e.innerHTML='<img src="https://i.ytimg.com/vi/'+t.id+'/mqdefault.jpg" alt=""><div><b>'+esc(t.t||'YouTube')+'</b><small>'+esc(t.a)+'</small></div><i class="'+(M.p?'on':'')+'"></i>'}e.classList.add('on')}
+ var k=t.id+t.t+t.a+M.p;if(k!==npK){npK=k;e.innerHTML='<img src="https://i.ytimg.com/vi/'+t.id+'/mqdefault.jpg" alt=""><div><b>'+esc(t.t||'YouTube')+'</b><small>'+esc(t.a)+'</small></div>'}e.classList.add('on')}
 function whenYT(cb){mk();if(ready)cb();else q.push(cb)}
 function onSt(e){if(e.data===1){errN=0;g('muWarn').textContent=''}else if(e.data===0&&M.on&&isHost())nxt()}
 function onEr(){if(!M.on||!isHost())return;errN++;say('Bu şarkı oynatılamıyor, geçiliyor','err');if(errN>=M.l.length){M.p=false;errN=0;ui();bc();return}setTimeout(nxt,800)}
@@ -6665,7 +6673,7 @@ function ui(){if(!M.on)return;var t=M.l[M.i],h=isHost();
  sec.querySelectorAll('[data-m=pp],[data-m=prev],[data-m=next]').forEach(function(b){b.disabled=!h});g('muSeek').disabled=!h;g('muAdd').style.display=h?'':'none';
  var sig=M.l.map(function(x){return x.id+x.t+x.a}).join()+'|'+M.i+'|'+h;if(sig!==lsig){lsig=sig;g('muCnt').textContent=M.l.length?'· '+M.l.length:'';
   g('muList').innerHTML=M.l.length?M.l.map(function(x,i){return '<div class="muItem'+(i===M.i?' cur':'')+'" data-i="'+i+'"><img src="https://i.ytimg.com/vi/'+x.id+'/mqdefault.jpg" alt="" loading="lazy"><div class="g"><b>'+esc(x.t||'YouTube')+'</b><small>'+esc(x.a)+'</small></div>'+(h?'<button type="button" data-d="'+i+'" title="Kaldır">✕</button>':'')+'</div>'}).join(''):'<small>Liste boş.</small>'}}
-function tick(){if(!M.on)return;lyTick();np();var d=dur(),c=cur(),sk=g('muSeek');
+function tick(){if(!M.on)return;try{lyTick();np();if(M.p&&ready&&curId&&loadT&&Date.now()-loadT>2000&&yt.getPlayerState()===2)yt.playVideo()}catch(e){}var d=dur(),c=cur(),sk=g('muSeek');
  if(!seeking){var p=d?Math.min(100,c/d*100):0;sk.value=p*10;sk.style.setProperty('--p',p+'%');g('muT1').textContent=fmt(c)}g('muT2').textContent=fmt(d);
  var wn=g('muWarn');if(M.p&&ready&&curId&&loadT&&Date.now()-loadT>2500){var s=-9;try{s=yt.getPlayerState()}catch(e){}if(s!==1&&s!==3&&s!==0)wn.textContent='Tarayıcı sesi engellemiş olabilir. Başlatmak için kapağa dokun.'}}
 sec.addEventListener('click',function(e){var b;
