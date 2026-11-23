@@ -6563,6 +6563,13 @@ html,body,button,input,select{font-family:'Plus Jakarta Sans',system-ui,-apple-s
 #muTap{display:none}#muTap.on{display:inline-flex}
 @media(max-width:820px){.muWrap{grid-template-columns:1fr;padding:4px 14px 20px;gap:18px}.muArt{width:min(300px,66vw);border-radius:36px}.muTitle{font-size:24px}}
 </style><style id="muzCss">
+.muLy{width:min(460px,100%);min-height:96px;display:flex;flex-direction:column;gap:6px;align-items:center;justify-content:center;padding:14px 18px;border-radius:24px;background:rgb(from var(--ovc,#ffffff) r g b / .07);backdrop-filter:blur(14px);box-sizing:border-box;text-align:center}
+.muLy:empty{display:none}.muLy p{margin:0;font-size:14px;opacity:.45;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.muLy b{font:700 20px/1.3 var(--ui);max-width:100%}
+#muz .muArt{border-radius:34px;box-shadow:0 24px 80px #000a,0 0 0 1px #ffffff14}#muz #muSeek{height:5px}#muz .muB.pp{background:linear-gradient(135deg,#4ff5d3,#8b7bff);color:#06121a}
+.vcNp{display:none;align-items:center;gap:10px;margin:10px 0 0;padding:8px;border-radius:14px;background:rgb(from var(--ovc,#ffffff) r g b / .08)}.vcNp.on{display:flex}
+.vcNp img{width:38px;height:38px;border-radius:10px;object-fit:cover;flex:none}.vcNp div{min-width:0;flex:1}.vcNp b{display:block;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.vcNp small{display:block;opacity:.7;font-size:12px}
+.vcNp i{width:14px;height:14px;flex:none;border-radius:50%;background:#4ff5d3;opacity:.35}.vcNp i.on{opacity:1;animation:vcNpP 1.2s ease-in-out infinite}@keyframes vcNpP{50%{transform:scale(.6)}}
+body:has(#vcPanel[style*="block"] .vcNp.on) #side,body:has(#vcPanel[style*="block"] .vcNp.on) #rail{padding-bottom:360px!important}
 #muYtW{position:fixed;left:-9999px;top:0;width:200px;height:200px;overflow:hidden;pointer-events:none}
 #muz .muArt{cursor:pointer}
 #muz .muWarn{color:#ffb44d;font-size:13px;min-height:17px;max-width:400px}
@@ -6584,7 +6591,7 @@ sec.innerHTML='<div id="muYtW"><div id="muYtH"></div></div><div class="muBg" id=
 '<div class="muEq" id="muEq"><i></i><i></i><i></i><i></i><i></i></div>'+
 '<input type="range" id="muSeek" min="0" max="1000" value="0"><div class="muTime"><span id="muT1">0:00</span><span id="muT2">0:00</span></div>'+
 '<div class="muCtl"><button class="muB" data-m="prev" type="button">'+IC.prev+'</button><button class="muB pp" data-m="pp" id="muPP" type="button">'+IC.play+'</button><button class="muB" data-m="next" type="button">'+IC.next+'</button></div>'+
-'<div class="muVol">'+IC.vol+'<input type="range" id="muVol" min="0" max="100" value="'+vol+'"></div><div class="muWarn" id="muWarn"></div></div>'+
+'<div class="muVol">'+IC.vol+'<input type="range" id="muVol" min="0" max="100" value="'+vol+'"></div><div class="muLy" id="muLy"></div><div class="muWarn" id="muWarn"></div></div>'+
 '<div class="muSide"><div class="card" id="muAdd"><h3>Müzik ekle</h3><div class="muRow"><input id="muUrl" type="text" placeholder="YouTube linki yapıştır" autocomplete="off"><button class="btn primary" data-m="add" type="button">+</button></div>'+
 '<div class="muQ"><button class="btn" data-m="json" type="button">JSON yükle</button><button class="btn" data-m="sample" type="button">Örnek JSON</button></div><input type="file" id="muFile" accept=".json,application/json" hidden></div>'+
 '<div class="card"><h3>Çalma listesi <small id="muCnt"></small></h3><div id="muList"></div></div></div></div>';
@@ -6601,11 +6608,43 @@ function cur(){try{if(yt&&ready&&yt.getCurrentTime)return yt.getCurrentTime()||0
 function dur(){try{if(yt&&ready&&yt.getDuration)return yt.getDuration()||0}catch(e){}return 0}
 function fmt(s){s=Math.max(0,Math.floor(s||0));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
 /* --- YouTube gizli oynatıcı (sadece ses, görüntü ekran dışı) --- */
-function loadAPI(){return new Promise(function(ok,no){if(w.YT&&YT.Player)return ok();var prev=w.onYouTubeIframeAPIReady;w.onYouTubeIframeAPIReady=function(){try{prev&&prev()}catch(e){}ok()};if(!document.querySelector('script[src*="youtube.com/iframe_api"]')){var s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';s.onerror=no;document.head.appendChild(s)}setTimeout(function(){if(!(w.YT&&YT.Player))no()},15000)})}
-function mk(){if(yt)return;yt='pend';loadAPI().then(function(){if(!M.on){yt=null;return}
- var o={width:200,height:200,playerVars:{autoplay:1,controls:0,disablekb:1,playsinline:1,rel:0,fs:0},events:{onReady:function(){ready=true;try{yt.setVolume(vol)}catch(e){}var f=q;q=[];f.forEach(function(c){c()})},onStateChange:onSt,onError:onEr}};
- if(/^https?:$/.test(location.protocol))o.playerVars.origin=location.origin;
- yt=new YT.Player('muYtH',o)}).catch(function(){yt=null;g('muWarn').textContent='YouTube yüklenemedi, bağlantını kontrol et.'})}
+/* --- Reklamsız ses: YouTube gömülü oynatıcı yerine Invidious/Piped ses akışı + <audio> --- */
+var AC={},INS=null,FB=[['p','https://pipedapi.kavin.rocks'],['i','https://yewtu.be'],['i','https://inv.nadeko.net']];
+function jf(u,ms){var c=new AbortController(),t=setTimeout(function(){c.abort()},ms||6000);return fetch(u,{signal:c.signal}).then(function(r){clearTimeout(t);if(!r.ok)throw 0;return r.json()})}
+function insts(){return INS||(INS=Promise.all([
+ jf('https://api.invidious.io/instances.json?sort_by=type,health').then(function(j){return j.filter(function(x){return x[1]&&x[1].api&&x[1].type==='https'}).map(function(x){return['i',x[1].uri]})}).catch(function(){return[]}),
+ jf('https://piped-instances.kavin.rocks/').then(function(j){return j.map(function(x){return['p',x.api_url]})}).catch(function(){return[]})
+]).then(function(a){return a[0].slice(0,8).concat(a[1].slice(0,8),FB)}))}
+function best(a,m){a=(a||[]).filter(function(f){return /audio/.test(f.mimeType||f.type||'')});return a.filter(function(f){return /mp4/.test(f.mimeType||f.type)}).concat(a).sort(function(x,y){return(+y.bitrate||0)-(+x.bitrate||0)})[0]}
+function tryI(x,id){var b=x[1].replace(/\/$/,'');
+ if(x[0]==='p')return jf(b+'/streams/'+id,8000).then(function(j){var f=best(j.audioStreams);if(!f)throw 0;return f.url});
+ return jf(b+'/api/v1/videos/'+id+'?local=true&fields=adaptiveFormats',8000).then(function(j){var f=best(j.adaptiveFormats);if(!f)throw 0;return f.url[0]==='/'?b+f.url:f.url})}
+function audioUrl(id){if(AC[id])return AC[id];var p=AC[id]=insts().then(function(L){return new Promise(function(ok,no){var i=0,w=0;function nx(){if(i>=L.length){if(!w)no();return}w++;tryI(L[i++],id).then(ok,function(){w--;nx()})}nx();nx();nx()})});p.catch(function(){delete AC[id]});return p}
+function mk(){if(yt)return;var a=new Audio();a.preload='auto';a.volume=vol/100;
+ yt={_ld:0,getCurrentTime:function(){return a.currentTime||0},getDuration:function(){return isFinite(a.duration)?a.duration:0},
+  getPlayerState:function(){return a.ended?0:a.paused?(yt._ld?3:2):a.readyState<3?3:1},
+  setVolume:function(v){a.volume=v/100},seekTo:function(x){try{a.currentTime=x}catch(e){}},
+  playVideo:function(){a.play().catch(function(){})},pauseVideo:function(){a.pause()},
+  stopVideo:function(){a.pause();a.removeAttribute('src')},destroy:function(){a.pause();a.removeAttribute('src')},
+  _load:function(o,auto){var me=yt,id=o.videoId;me._ld=1;a.pause();audioUrl(id).then(function(u){if(yt!==me||curId!==id)return;me._ld=0;a.src=u;a.onloadedmetadata=function(){if(o.startSeconds>0)try{a.currentTime=o.startSeconds}catch(e){}};if(auto)a.play().catch(function(){})}).catch(function(){me._ld=0;if(yt===me&&curId===id)onEr()})},
+  loadVideoById:function(o){yt._load(o,1)},cueVideoById:function(o){yt._load(o,0)}};
+ a.onplaying=function(){onSt({data:1})};a.onended=function(){onSt({data:0})};a.onerror=function(){if(a.getAttribute('src'))onEr()};
+ ready=true;var f=q;q=[];f.forEach(function(c){c()})}
+/* --- LRCLIB senkron sözler (remiks/slowed/cover vb. atlanır) + sol alt mini oynatıcı --- */
+var BAD=/remix|\bmix\b|sped|slowed|nightcore|cover|8d|reverb|bass ?boost|\bedit\b|karaoke|mashup|\blive\b|instrumental/i,LY=[],lyK='',lyI=-2,npK='';
+function clean(s){return String(s||'').replace(/[\(\[][^\)\]]*[\)\]]/g,' ').replace(/official|music video|video|audio|lyrics?|\bhd\b|4k|\b(ft|feat)\b\.?.*/ig,' ').replace(/\s+/g,' ').trim()}
+function lrc(s){var r=[];String(s).split('\n').forEach(function(l){var m,re=/\[(\d+):(\d+(?:\.\d+)?)\]/g,ts=[],tx=l.replace(/\[[^\]]*\]/g,'').trim();while(m=re.exec(l))ts.push(+m[1]*60+ +m[2]);ts.forEach(function(x){r.push({s:x,t:tx})})});return r.sort(function(a,b){return a.s-b.s})}
+function lyLoad(t){var k=lyK=t.id+'|'+t.t;LY=[];lyI=-2;if(BAD.test(t.t))return;
+ var ti=clean(t.t).replace(/ - /g,' '),q=(ti.toLowerCase().indexOf(clean(t.a).toLowerCase())>=0?'':clean(t.a)+' ')+ti;
+ jf('https://lrclib.net/api/search?q='+encodeURIComponent(q),9000).then(function(a){if(lyK!==k)return;a=a.filter(function(x){return x.syncedLyrics&&!x.instrumental&&!BAD.test(x.trackName||'')});var d=dur(),b=(d&&a.filter(function(x){return Math.abs(x.duration-d)<4})[0])||a[0];if(b){LY=lrc(b.syncedLyrics);lyI=-2}}).catch(function(){})}
+function lyTick(){var t=M.l[M.i],el=g('muLy');if(!el)return;if(t&&t.t&&lyK!==t.id+'|'+t.t)lyLoad(t);if(!t){LY=[];lyK=''}
+ if(!LY.length){if(lyI!==-3){lyI=-3;el.innerHTML=''}return}
+ var c=cur()+.15,i=-1;for(var j=0;j<LY.length&&LY[j].s<=c;j++)i=j;if(i===lyI)return;lyI=i;
+ var L=function(j){return LY[j]?(esc(LY[j].t)||'♪'):'&nbsp;'};el.innerHTML='<p>'+L(i-1)+'</p><b>'+(i<0?'♪':L(i))+'</b><p>'+L(i+1)+'</p>'}
+function np(){var vp=document.getElementById('vcPanel'),t=M.on&&M.l[M.i],e=vp&&vp.querySelector('.vcNp');if(!vp)return;
+ if(!t){if(e)e.classList.remove('on');npK='';return}
+ if(!e){e=document.createElement('div');e.className='vcNp';var sb=g('vcSub');if(!sb)return;sb.parentNode.insertBefore(e,sb.nextSibling)}
+ var k=t.id+t.t+t.a+M.p;if(k!==npK){npK=k;e.innerHTML='<img src="https://i.ytimg.com/vi/'+t.id+'/mqdefault.jpg" alt=""><div><b>'+esc(t.t||'YouTube')+'</b><small>'+esc(t.a)+'</small></div><i class="'+(M.p?'on':'')+'"></i>'}e.classList.add('on')}
 function whenYT(cb){mk();if(ready)cb();else q.push(cb)}
 function onSt(e){if(e.data===1){errN=0;g('muWarn').textContent=''}else if(e.data===0&&M.on&&isHost())nxt()}
 function onEr(){if(!M.on||!isHost())return;errN++;say('Bu şarkı oynatılamıyor, geçiliyor','err');if(errN>=M.l.length){M.p=false;errN=0;ui();bc();return}setTimeout(nxt,800)}
@@ -6641,7 +6680,7 @@ function ui(){if(!M.on)return;var t=M.l[M.i],h=isHost();
  sec.querySelectorAll('[data-m=pp],[data-m=prev],[data-m=next]').forEach(function(b){b.disabled=!h});g('muSeek').disabled=!h;g('muAdd').style.display=h?'':'none';
  var sig=M.l.map(function(x){return x.id+x.t+x.a}).join()+'|'+M.i+'|'+h;if(sig!==lsig){lsig=sig;g('muCnt').textContent=M.l.length?'· '+M.l.length:'';
   g('muList').innerHTML=M.l.length?M.l.map(function(x,i){return '<div class="muItem'+(i===M.i?' cur':'')+'" data-i="'+i+'"><img src="https://i.ytimg.com/vi/'+x.id+'/mqdefault.jpg" alt="" loading="lazy"><div class="g"><b>'+esc(x.t||'YouTube')+'</b><small>'+esc(x.a)+'</small></div>'+(h?'<button type="button" data-d="'+i+'" title="Kaldır">✕</button>':'')+'</div>'}).join(''):'<small>Liste boş.</small>'}}
-function tick(){if(!M.on)return;var d=dur(),c=cur(),sk=g('muSeek');
+function tick(){if(!M.on)return;lyTick();np();var d=dur(),c=cur(),sk=g('muSeek');
  if(!seeking){var p=d?Math.min(100,c/d*100):0;sk.value=p*10;sk.style.setProperty('--p',p+'%');g('muT1').textContent=fmt(c)}g('muT2').textContent=fmt(d);
  var wn=g('muWarn');if(M.p&&ready&&curId&&loadT&&Date.now()-loadT>2500){var s=-9;try{s=yt.getPlayerState()}catch(e){}if(s!==1&&s!==3&&s!==0)wn.textContent='Tarayıcı sesi engellemiş olabilir. Başlatmak için kapağa dokun.'}}
 sec.addEventListener('click',function(e){var b;
@@ -6656,7 +6695,7 @@ g('muVol').addEventListener('input',function(){vol=+this.value;try{localStorage.
 g('muFile').addEventListener('change',function(){var f=this.files&&this.files[0];this.value='';if(!f)return;var r=new FileReader();r.onload=function(){imp(String(r.result))};r.readAsText(f)});
 /* --- etkinlik arayüzü (MUZ API) --- */
 function run(){clearInterval(tk);tk=setInterval(tick,400);clearInterval(hb);hb=setInterval(function(){if(M.on&&isHost()){if(M.p)M.pos=cur();bc()}},5000);lsig='';artK='\u0000';ui();try{w.__vc.stageR(true)}catch(e){}}
-function stop(){var was=M.on;M.on=false;M.p=false;clearInterval(tk);clearInterval(hb);tk=hb=null;try{if(yt&&yt.destroy)yt.destroy()}catch(e){}yt=null;ready=false;q=[];curId='';var Wp=g('muYtW');if(Wp)Wp.innerHTML='<div id="muYtH"></div>';if(was)try{w.__vc.stageR(true)}catch(e){}}
+function stop(){var was=M.on;M.on=false;M.p=false;np();clearInterval(tk);clearInterval(hb);tk=hb=null;try{if(yt&&yt.destroy)yt.destroy()}catch(e){}yt=null;ready=false;q=[];curId='';var Wp=g('muYtW');if(Wp)Wp.innerHTML='<div id="muYtH"></div>';if(was)try{w.__vc.stageR(true)}catch(e){}}
 function start(){if(!isHost()){say('Etkinliği oda sahibi başlatır');return}
  try{w.MOV&&MOV.on&&MOV.on()&&MOV.stop()}catch(e){}
  if(!M.on){M.on=true;M.l=[];M.i=-1;M.p=false;M.pos=0;try{JSON.parse(localStorage.getItem('budd_muz_list')||'[]').forEach(function(x){if(x&&ID.test(x.id))M.l.push(T(x.id,x.t,x.a))})}catch(e){}if(M.l.length)M.i=0;apply()}
