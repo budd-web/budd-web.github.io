@@ -6562,7 +6562,113 @@ html,body,button,input,select{font-family:'Plus Jakarta Sans',system-ui,-apple-s
 .muP{display:inline-flex;align-items:center;gap:8px;margin:0 8px 8px 0;padding:4px 14px 4px 4px;background:var(--os2);border-radius:99px;font-size:14px}.muP canvas{width:30px;height:30px;border-radius:50%}
 #muTap{display:none}#muTap.on{display:inline-flex}
 @media(max-width:820px){.muWrap{grid-template-columns:1fr;padding:4px 14px 20px;gap:18px}.muArt{width:min(300px,66vw);border-radius:36px}.muTitle{font-size:24px}}
-</style><section id="muz" class="screen" style="display:none!important"></section><script>window.MUZ=new Proxy({},{get:function(o,k){return k==="on"?function(){return false}:function(){}}});</script>
+</style><style id="muzCss">
+#muYtW{position:fixed;left:-9999px;top:0;width:200px;height:200px;overflow:hidden;pointer-events:none}
+#muz .muArt{cursor:pointer}
+#muz .muWarn{color:#ffb44d;font-size:13px;min-height:17px;max-width:400px}
+#muz .muRow input{height:40px;border:0;border-radius:8px;padding:0 12px;background:#0005;color:inherit;font:inherit}
+#muz .muRow .btn{height:40px}
+#muz .muQ{display:flex;gap:8px;margin-top:10px}
+#muz .muQ .btn{flex:1;width:auto!important;height:36px;padding:0 10px!important}
+#muz .muItem img{aspect-ratio:1;object-fit:cover}
+#muz .muSide h3 small{color:var(--om);font-weight:400}
+#muz .muItem button[data-d]{opacity:.6}#muz .muItem button[data-d]:hover{opacity:1}
+</style><section id="muz" class="screen"></section><script>(function(w){
+var sec=document.getElementById('muz');if(!sec)return;
+var M={on:false,l:[],i:-1,p:false,pos:0},yt=null,ready=false,q=[],curId='',loadT=0,tk=null,hb=null,errN=0,vol=80,seeking=false,lsig='',artK='\u0000';
+try{var sv=localStorage.getItem('budd_muz_vol');if(sv!==null)vol=Math.max(0,Math.min(100,+sv||0))}catch(e){}
+var ID=/^[\w-]{11}$/;
+var IC={play:'<svg viewBox="0 0 24 24" width="30" height="30"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>',pause:'<svg viewBox="0 0 24 24" width="30" height="30"><path fill="currentColor" d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>',prev:'<svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M6 6h2v12H6zM20 6v12L9.5 12z"/></svg>',next:'<svg viewBox="0 0 24 24" width="22" height="22"><path fill="currentColor" d="M16 6h2v12h-2zM4 6l10.5 6L4 18z"/></svg>',vol:'<svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M3 9v6h4l5 5V4L7 9zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4z"/></svg>'};
+sec.innerHTML='<div id="muYtW"><div id="muYtH"></div></div><div class="muBg" id="muBg"></div><div class="muWrap"><div class="muMain">'+
+'<div class="muArt" id="muArt" title="Çal"><span>🎵</span></div><div class="muTitle" id="muTitle">Şarkı seç</div><div class="muSub" id="muSub"></div>'+
+'<div class="muEq" id="muEq"><i></i><i></i><i></i><i></i><i></i></div>'+
+'<input type="range" id="muSeek" min="0" max="1000" value="0"><div class="muTime"><span id="muT1">0:00</span><span id="muT2">0:00</span></div>'+
+'<div class="muCtl"><button class="muB" data-m="prev" type="button">'+IC.prev+'</button><button class="muB pp" data-m="pp" id="muPP" type="button">'+IC.play+'</button><button class="muB" data-m="next" type="button">'+IC.next+'</button></div>'+
+'<div class="muVol">'+IC.vol+'<input type="range" id="muVol" min="0" max="100" value="'+vol+'"></div><div class="muWarn" id="muWarn"></div></div>'+
+'<div class="muSide"><div class="card" id="muAdd"><h3>Müzik ekle</h3><div class="muRow"><input id="muUrl" type="text" placeholder="YouTube linki yapıştır" autocomplete="off"><button class="btn primary" data-m="add" type="button">+</button></div>'+
+'<div class="muQ"><button class="btn" data-m="json" type="button">JSON yükle</button><button class="btn" data-m="sample" type="button">Örnek JSON</button></div><input type="file" id="muFile" accept=".json,application/json" hidden></div>'+
+'<div class="card"><h3>Çalma listesi <small id="muCnt"></small></h3><div id="muList"></div></div></div></div>';
+function g(i){return document.getElementById(i)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function isHost(){try{return !NET.on||NET.host||!NET.joined}catch(e){return true}}
+function say(m,t){try{toast(m,t||'')}catch(e){}}
+function ytId(u){u=String(u||'').trim();if(ID.test(u))return u;try{var x=new URL(u),h=x.hostname.replace(/^(www|m|music)\./,''),m='';if(h==='youtu.be')m=x.pathname.slice(1,12);else if(/(^|\.)youtube(-nocookie)?\.com$/.test(h)){if(x.pathname==='/watch')m=x.searchParams.get('v')||'';else{var p=x.pathname.match(/^\/(?:shorts|embed|live|v)\/([\w-]{11})/);m=p?p[1]:''}}return ID.test(m)?m:''}catch(e){return ''}}
+function T(id,t,a){return{id:id,t:String(t||'').slice(0,80),a:String(a||'').slice(0,60)}}
+function snap(){return{t:'muz',k:'st',l:M.l.map(function(x){return{id:x.id,t:x.t,a:x.a}}),i:M.i,p:M.p,pos:M.pos}}
+function bc(){try{netSend(snap())}catch(e){}}
+function save(){try{localStorage.setItem('budd_muz_list',JSON.stringify(M.l))}catch(e){}}
+function cur(){try{if(yt&&ready&&yt.getCurrentTime)return yt.getCurrentTime()||0}catch(e){}return M.pos}
+function dur(){try{if(yt&&ready&&yt.getDuration)return yt.getDuration()||0}catch(e){}return 0}
+function fmt(s){s=Math.max(0,Math.floor(s||0));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+/* --- YouTube gizli oynatıcı (sadece ses, görüntü ekran dışı) --- */
+function loadAPI(){return new Promise(function(ok,no){if(w.YT&&YT.Player)return ok();var prev=w.onYouTubeIframeAPIReady;w.onYouTubeIframeAPIReady=function(){try{prev&&prev()}catch(e){}ok()};if(!document.querySelector('script[src*="youtube.com/iframe_api"]')){var s=document.createElement('script');s.src='https://www.youtube.com/iframe_api';s.onerror=no;document.head.appendChild(s)}setTimeout(function(){if(!(w.YT&&YT.Player))no()},15000)})}
+function mk(){if(yt)return;yt='pend';loadAPI().then(function(){if(!M.on){yt=null;return}
+ var o={width:200,height:200,playerVars:{autoplay:1,controls:0,disablekb:1,playsinline:1,rel:0,fs:0},events:{onReady:function(){ready=true;try{yt.setVolume(vol)}catch(e){}var f=q;q=[];f.forEach(function(c){c()})},onStateChange:onSt,onError:onEr}};
+ if(/^https?:$/.test(location.protocol))o.playerVars.origin=location.origin;
+ yt=new YT.Player('muYtH',o)}).catch(function(){yt=null;g('muWarn').textContent='YouTube yüklenemedi, bağlantını kontrol et.'})}
+function whenYT(cb){mk();if(ready)cb();else q.push(cb)}
+function onSt(e){if(e.data===1){errN=0;g('muWarn').textContent=''}else if(e.data===0&&M.on&&isHost())nxt()}
+function onEr(){if(!M.on||!isHost())return;errN++;say('Bu şarkı oynatılamıyor, geçiliyor','err');if(errN>=M.l.length){M.p=false;errN=0;ui();bc();return}setTimeout(nxt,800)}
+function apply(){var t=M.l[M.i];if(!t){curId='';if(yt&&ready)try{yt.stopVideo()}catch(e){}return}
+ whenYT(function(){try{
+  if(curId!==t.id){curId=t.id;loadT=Date.now();var a={videoId:t.id,startSeconds:Math.max(0,M.pos)};if(M.p)yt.loadVideoById(a);else yt.cueVideoById(a)}
+  else{if(Math.abs(cur()-M.pos)>2.5)yt.seekTo(M.pos,true);
+   if(M.p){if(yt.getPlayerState()!==1){loadT=Date.now();yt.playVideo()}}else yt.pauseVideo()}
+ }catch(e){}})}
+/* --- liste işlemleri (sadece oda sahibi) --- */
+function meta(t){fetch('https://noembed.com/embed?url='+encodeURIComponent('https://www.youtube.com/watch?v='+t.id)).then(function(r){return r.json()}).then(function(d){if(!d)return;if(!t.t&&d.title)t.t=String(d.title).slice(0,80);if(!t.a&&d.author_name)t.a=String(d.author_name).replace(/ - Topic$/,'').slice(0,60);save();ui();if(isHost()&&M.on)bc()}).catch(function(){})}
+function addT(o){var id=ytId(o.url||o.id);if(!id||M.l.length>=200||M.l.some(function(x){return x.id===id}))return false;var t=T(id,o.title||o.t,o.artist||o.a);M.l.push(t);if(!t.t||!t.a)meta(t);return true}
+function after(){save();if(M.i<0&&M.l.length){M.i=0;M.pos=0;M.p=true;apply()}ui();bc()}
+function go(i){if(!M.l.length)return;M.i=((i%M.l.length)+M.l.length)%M.l.length;M.pos=0;M.p=true;apply();ui();bc()}
+function nxt(){go(M.i+1)}
+function act(a){if(!isHost())return;
+ if(a==='pp'){if(M.i<0){if(M.l.length)go(0);return}if(M.p)M.pos=cur();M.p=!M.p;apply();ui();bc()}
+ else if(a==='next')nxt();
+ else if(a==='prev'){if(cur()>3){M.pos=0;apply();bc()}else go(M.i-1)}
+ else if(a==='add'){var u=g('muUrl'),v=u.value.trim();if(!v)return;if(addT({url:v})){u.value='';after()}else say('Geçerli bir YouTube linki gir (ya da zaten listede)','err')}
+ else if(a==='json')g('muFile').click();
+ else if(a==='sample')sample()}
+function del(i){if(!isHost()||!M.l[i])return;M.l.splice(i,1);if(i<M.i)M.i--;else if(i===M.i){M.pos=0;if(M.i>=M.l.length)M.i=M.l.length-1;if(M.i<0)M.p=false}
+ if(!M.l.length){M.i=-1;M.p=false;curId=''}apply();save();ui();bc()}
+function imp(txt){try{var j=JSON.parse(txt),a=Array.isArray(j)?j:(j&&(j.tracks||j.songs||j.items||j.list))||[],n=0;a.forEach(function(x){if(typeof x==='string')x={url:x};if(x&&addT({url:x.url||x.link||x.id,title:x.title||x.name,artist:x.artist||x.author||x.by}))n++});say(n+' şarkı eklendi',n?'ok':'err');after()}catch(e){say('Geçersiz JSON dosyası','err')}}
+function sample(){var s='{\n  "name": "Örnek liste",\n  "tracks": [\n    { "url": "https://www.youtube.com/watch?v=fJ9rUzIMcZQ", "title": "Bohemian Rhapsody", "artist": "Queen" },\n    { "url": "https://youtu.be/dQw4w9WgXcQ", "title": "Never Gonna Give You Up", "artist": "Rick Astley" },\n    { "url": "https://www.youtube.com/watch?v=kJQP7kiw5Fk", "title": "Despacito", "artist": "Luis Fonsi" },\n    { "url": "https://www.youtube.com/watch?v=JGwWNGJdvx8" },\n    { "url": "https://www.youtube.com/watch?v=60ItHLz5WEA" }\n  ]\n}\n';
+ var a=document.createElement('a');a.href=URL.createObjectURL(new Blob([s],{type:'application/json'}));a.download='ornek-muzik.json';document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);a.remove()},500)}
+/* --- arayüz --- */
+function ui(){if(!M.on)return;var t=M.l[M.i],h=isHost();
+ var k=t?t.id:'';if(k!==artK){artK=k;g('muArt').innerHTML=t?'<img src="https://i.ytimg.com/vi/'+t.id+'/hqdefault.jpg" alt="" style="transform:scale(1.34)">':'<span>🎵</span>';g('muBg').style.backgroundImage=t?'url(https://i.ytimg.com/vi/'+t.id+'/mqdefault.jpg)':''}
+ g('muTitle').textContent=t?(t.t||'YouTube'):(M.l.length?'Şarkı seç':'Liste boş');g('muSub').textContent=t?t.a:(h?'Link ekle ya da JSON yükle':'Oda sahibi şarkı ekleyecek');
+ g('muEq').classList.toggle('on',!!(t&&M.p));g('muPP').innerHTML=M.p?IC.pause:IC.play;
+ sec.querySelectorAll('[data-m=pp],[data-m=prev],[data-m=next]').forEach(function(b){b.disabled=!h});g('muSeek').disabled=!h;g('muAdd').style.display=h?'':'none';
+ var sig=M.l.map(function(x){return x.id+x.t+x.a}).join()+'|'+M.i+'|'+h;if(sig!==lsig){lsig=sig;g('muCnt').textContent=M.l.length?'· '+M.l.length:'';
+  g('muList').innerHTML=M.l.length?M.l.map(function(x,i){return '<div class="muItem'+(i===M.i?' cur':'')+'" data-i="'+i+'"><img src="https://i.ytimg.com/vi/'+x.id+'/mqdefault.jpg" alt="" loading="lazy"><div class="g"><b>'+esc(x.t||'YouTube')+'</b><small>'+esc(x.a)+'</small></div>'+(h?'<button type="button" data-d="'+i+'" title="Kaldır">✕</button>':'')+'</div>'}).join(''):'<small>Liste boş.</small>'}}
+function tick(){if(!M.on)return;var d=dur(),c=cur(),sk=g('muSeek');
+ if(!seeking){var p=d?Math.min(100,c/d*100):0;sk.value=p*10;sk.style.setProperty('--p',p+'%');g('muT1').textContent=fmt(c)}g('muT2').textContent=fmt(d);
+ var wn=g('muWarn');if(M.p&&ready&&curId&&loadT&&Date.now()-loadT>2500){var s=-9;try{s=yt.getPlayerState()}catch(e){}if(s!==1&&s!==3&&s!==0)wn.textContent='Tarayıcı sesi engellemiş olabilir. Başlatmak için kapağa dokun.'}}
+sec.addEventListener('click',function(e){var b;
+ if(b=e.target.closest('[data-d]')){e.stopPropagation();del(+b.dataset.d);return}
+ if(b=e.target.closest('[data-m]')){act(b.dataset.m);return}
+ if(b=e.target.closest('.muItem')){if(isHost())go(+b.dataset.i);return}
+ if(e.target.closest('#muArt')){whenYT(function(){try{if(M.p)yt.playVideo()}catch(x){}});g('muWarn').textContent=''}});
+sec.addEventListener('keydown',function(e){if(e.key==='Enter'&&e.target.id==='muUrl'){e.preventDefault();act('add')}});
+g('muSeek').addEventListener('input',function(){seeking=true;var d=dur();g('muT1').textContent=fmt(this.value/1000*d);this.style.setProperty('--p',this.value/10+'%')});
+g('muSeek').addEventListener('change',function(){seeking=false;if(!isHost())return;var d=dur();if(!d)return;M.pos=this.value/1000*d;apply();bc()});
+g('muVol').addEventListener('input',function(){vol=+this.value;try{localStorage.setItem('budd_muz_vol',vol)}catch(e){}try{if(ready)yt.setVolume(vol)}catch(e){}});
+g('muFile').addEventListener('change',function(){var f=this.files&&this.files[0];this.value='';if(!f)return;var r=new FileReader();r.onload=function(){imp(String(r.result))};r.readAsText(f)});
+/* --- etkinlik arayüzü (MUZ API) --- */
+function run(){clearInterval(tk);tk=setInterval(tick,400);clearInterval(hb);hb=setInterval(function(){if(M.on&&isHost()){if(M.p)M.pos=cur();bc()}},5000);lsig='';artK='\u0000';ui();try{w.__vc.stageR(true)}catch(e){}}
+function stop(){var was=M.on;M.on=false;M.p=false;clearInterval(tk);clearInterval(hb);tk=hb=null;try{if(yt&&yt.destroy)yt.destroy()}catch(e){}yt=null;ready=false;q=[];curId='';var Wp=g('muYtW');if(Wp)Wp.innerHTML='<div id="muYtH"></div>';if(was)try{w.__vc.stageR(true)}catch(e){}}
+function start(){if(!isHost()){say('Etkinliği oda sahibi başlatır');return}
+ try{w.MOV&&MOV.on&&MOV.on()&&MOV.stop()}catch(e){}
+ if(!M.on){M.on=true;M.l=[];M.i=-1;M.p=false;M.pos=0;try{JSON.parse(localStorage.getItem('budd_muz_list')||'[]').forEach(function(x){if(x&&ID.test(x.id))M.l.push(T(x.id,x.t,x.a))})}catch(e){}if(M.l.length)M.i=0;apply()}
+ run();bc();try{w.__vc.focusVoice()}catch(e){}}
+function recv(d){if(!d||d.k!=='st'||isHost())return;var l=[];(Array.isArray(d.l)?d.l:[]).slice(0,200).forEach(function(x){if(x&&ID.test(x.id))l.push(T(x.id,x.t,x.a))});
+ var was=M.on;M.on=true;if(!was){try{w.MOV&&MOV.on&&MOV.on()&&MOV.stop()}catch(e){}}
+ M.l=l;M.i=Math.max(-1,Math.min(l.length-1,(+d.i)|0));M.p=!!d.p;M.pos=Math.max(0,+d.pos||0)+(d.p?0.3:0);
+ apply();if(!was)run();else ui()}
+w.MUZ={on:function(){return M.on},start:start,create:start,stop:stop,recv:recv,hostIn:function(){},sendTo:function(c){try{c.send(snap())}catch(e){}},
+ add:function(o){if(!M.on||!isHost()||!o)return;if(addT({url:o.url,title:o.title,artist:o.artist}))after()}};
+})(window);
+</script>
 <script>
 (function(){
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
