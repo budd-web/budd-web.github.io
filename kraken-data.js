@@ -1,4 +1,4 @@
-const KRAKEN_DATA = [
+[
   {
     "id": "icerik",
     "tur": "film",
@@ -1551,6 +1551,4 @@ const KRAKEN_DATA = [
     "ses": "",
     "one_cikan": false
   }
-];
-
-export default KRAKEN_DATA;
+]
